@@ -13,9 +13,9 @@
 
 | Integrante | Tareas principales de esta semana | Estado |
 | :--- | :--- | :---: |
-| **Carlos N. Andicoberry** *(Gestor BD)* | Inicialización del repositorio, ramas, tablero GitHub Projects y modelado/creación de la Base de Datos. | ✅ Completado |
+| **Carlos N. Andicoberry**  | Inicialización del repositorio, ramas, tablero GitHub Projects y modelado/creación de la Base de Datos. | ✅ Completado |
 | **Antonio Merichal** | Redacción de Introducción y Definición del problema (Memoria). | ✅ Completado |
-| **Pedro Urbano** | Redacción de Alcance y Objetivos del sistema (Memoria). | ✅ Completado |
+| **Carlos N. Andicoberry** | Redacción de Alcance y Objetivos del sistema (Memoria). | ✅ Completado |
 | **Carlos L. Madueño** | Redacción de Antecedentes y revisión de formato Markdown. | ✅ Completado |
 | **Noelia Cobo** | Identificación de Recursos y revisión general de la documentación. | ✅ Completado |
 
