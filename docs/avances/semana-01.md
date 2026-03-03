@@ -1,16 +1,27 @@
-# Reporte de Avance: Semana 1
+# Reporte de Avance: Sprint 1 (Semana 1)
 
-**Fecha:** 3 al 10 de marzo de 2026
+**Proyecto:** Gestión de obras musicales para orquesta clásica  
+**Metodología:** SCRUM (Sprints de 2 semanas)
 
-## 🎯 Objetivos de la semana
-- [x] Crear la carpeta de documentación dentro de mi repositorio de código.
-- [x] Redactar mi primer reporte usando Markdown.
-- [ ] Empezar con el desarrollo de la siguiente tarea.
+## 🎯 Objetivos del Sprint actual
+- [x] Configuración inicial del repositorio y ramas (`main`, `develop`).
+- [x] Configuración del tablero Kanban en GitHub Projects.
+- [x] Diseño y despliegue inicial de la Base de Datos.
+- [x] Redacción del borrador de la Memoria (Práctica 1).
 
-## 📊 Distribución de mi tiempo (Gráfico)
+## 👥 Reparto de tareas realizadas
+
+| Integrante | Tareas principales de esta semana | Estado |
+| :--- | :--- | :---: |
+| **Carlos N. Andicoberry** *(Gestor BD)* | Inicialización del repositorio, ramas, tablero GitHub Projects y modelado/creación de la Base de Datos. | ✅ Completado |
+| **Antonio Merichal** | Redacción de Introducción y Definición del problema (Memoria). | ✅ Completado |
+| **Pedro Urbano** | Redacción de Alcance y Objetivos del sistema (Memoria). | ✅ Completado |
+| **Carlos L. Madueño** | Redacción de Antecedentes y revisión de formato Markdown. | ✅ Completado |
+| **Noelia Cobo** | Identificación de Recursos y revisión general de la documentación. | ✅ Completado |
+
+## 📊 Gráfico de Esfuerzo (Semana 1)
 
 ```mermaid
-pie title ¿En qué trabajé esta semana?
-    "Entender GitHub" : 40
-    "Escribir Código" : 40
-    "Documentar" : 20
+pie title Distribución del trabajo (Semana 1)
+    "Configuración Técnica y Base de Datos (Carlos N.)" : 40
+    "Elaboración de Memoria y Documentación (Resto del equipo)" : 60
