@@ -1,7 +1,7 @@
 # Reporte de Avance: Sprint 1 (Semana 1)
 
 **Proyecto:** Gestión de obras musicales para orquesta clásica  
-**Metodología:** SCRUM (Sprints de 2 semanas)
+**Metodología:** SCRUM (Sprints de 1 semanas)
 
 ##  Objetivos del Sprint actual
 - [x] Configuración inicial del repositorio y ramas (`main`, `develop`).
@@ -23,5 +23,5 @@
 
 ```mermaid
 pie title Distribución del trabajo (Semana 1)
-    "Configuración Técnica y Base de Datos (Pedro Urbano)" : 50
-    "Elaboración de Memoria y Documentación (Resto del equipo)" : 50
+    "Configuración Técnica y Base de Datos (Pedro Urbano)" : 45
+    "Elaboración de Memoria y Documentación (Resto del equipo)" : 55
