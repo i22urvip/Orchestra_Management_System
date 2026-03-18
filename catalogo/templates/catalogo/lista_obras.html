@@ -1,0 +1,95 @@
+{% extends 'catalogo/base.html' %}
+
+{% block title %}Catálogo de Obras{% endblock %}
+
+{% block hero %}
+<div class="page-hero d-flex justify-content-between align-items-center">
+    <div>
+        <h1>Catálogo Musical</h1>
+        <p class="text-muted mb-0">Descubre partituras, compositores y detalles de nuestras obras.</p>
+    </div>
+    <div>
+        <a href="{% url 'lista_compositores' %}" class="btn btn-outline-light me-2">Compositores</a>
+        <a href="{% url 'nueva_obra' %}" class="btn btn-music">+ Añadir Obra</a>
+        <a href="{% url 'rocola' %}" class="btn btn-dark text-warning border-warning shadow-sm fw-bold">
+            <i class="bi bi-music-player"></i> Ir a la Rocola Interactiva
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+
+<style>
+    .zoom-hover {
+        /* Prepara la tarjeta para que la animación sea suave */
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+    .zoom-hover:hover {
+        /* Hace el zoom del 3% */
+        transform: scale(1.03); 
+        /* Cambia la flecha por la 'manita' para invitar a hacer clic */
+        cursor: pointer; 
+        /* Hace que la sombra sea un poco más grande al elevarse */
+        box-shadow: 0 10px 20px rgba(0,0,0,0.15) !important; 
+    }
+</style>
+
+<div class="card p-3 mb-4 shadow-musical border-0 form-card">
+    <form method="GET" action="{% url 'lista_obras' %}" class="row g-2 align-items-center">
+        <div class="col-md-3">
+            <input type="text" name="q" class="form-control" placeholder="Buscar título..." value="{{ query|default_if_none:'' }}">
+        </div>
+        <div class="col-md-3">
+            <select name="compositor" class="form-select">
+                <option value="">Todos los compositores</option>
+                {% for comp in compositores %}
+                    <option value="{{ comp.id }}" {% if comp.id|stringformat:"s" == compositor_seleccionado %}selected{% endif %}>{{ comp.nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <select name="tipo" class="form-select">
+                <option value="">Tipo de obra</option>
+                {% for key, value in tipos_obra %}
+                    <option value="{{ key }}" {% if key == tipo_seleccionado %}selected{% endif %}>{{ value }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <select name="orden" class="form-select">
+                <option value="popularidad" {% if orden_seleccionado == 'popularidad' or not orden_seleccionado %}selected{% endif %}>🔥 Popular</option>
+                <option value="duracion" {% if orden_seleccionado == 'duracion' %}selected{% endif %}>⏱️ Duración</option>
+                <option value="antiguedad" {% if orden_seleccionado == 'antiguedad' %}selected{% endif %}>🧓 Antigüedad</option>
+            </select>
+        </div>
+        <div class="col-md-2 d-flex gap-2">
+            <button type="submit" class="btn btn-music w-100">Filtrar</button>
+            <a href="{% url 'lista_obras' %}" class="btn btn-outline-danger" title="Limpiar">X</a>
+        </div>
+    </form>
+</div>
+
+<div class="row">
+    {% for obra in obras %}
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-musical h-100 border-0 border-start border-primary border-4 zoom-hover">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold">
+                        <a href="{% url 'detalle_obra' obra.id %}" class="text-decoration-none">{{ obra.titulo }}</a>
+                    </h5>
+                    <h6 class="card-subtitle mb-3 text-muted">{{ obra.compositor.nombre }} ({{ obra.ano_composicion }})</h6>
+                    <p class="card-text">
+                        <span class="badge bg-info text-dark">{{ obra.get_tipo_display }}</span>
+                        <span class="badge bg-light text-dark border">⏱️ {{ obra.duracion_minutos }} min</span>
+                        <span class="badge badge-music">🔥 {{ obra.popularidad }} visitas</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <div class="col-12"><div class="alert alert-warning">No hay obras registradas con esos filtros.</div></div>
+    {% endfor %}
+</div>
+
+{% endblock %}

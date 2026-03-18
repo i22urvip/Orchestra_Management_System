@@ -1,0 +1,42 @@
+{% extends 'catalogo/base.html' %}
+
+{% block title %}{{ compositor.nombre }}{% endblock %}
+
+{% block hero %}
+<div class="page-hero">
+    <h1>{{ compositor.nombre }}</h1>
+    <p class="text-muted mb-0">Ficha del compositor y sus obras en el catálogo.</p>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="card shadow-musical border-0 mt-4 mb-5">
+    <div class="card-header bg-primary text-white py-3">
+        <h2 class="mb-0">{{ compositor.nombre }}</h2>
+    </div>
+    <div class="card-body p-4">
+        {% if compositor.epoca %}<p><strong>Época:</strong> <span class="badge bg-secondary">{{ compositor.epoca }}</span></p>{% endif %}
+        {% if compositor.biografia %}<p class="lead">{{ compositor.biografia }}</p>{% endif %}
+        
+        <hr class="my-4">
+        <h4 class="text-primary mb-3">Obras en nuestro almacén ({{ compositor.obras.count }})</h4>
+        
+        <div class="list-group">
+            {% for obra in compositor.obras.all %}
+                <a href="{% url 'detalle_obra' obra.id %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="mb-1 fw-bold">{{ obra.titulo }}</h6>
+                        <small class="text-muted">{{ obra.get_tipo_display }} | Año: {{ obra.ano_composicion }}</small>
+                    </div>
+                    <span class="badge bg-primary rounded-pill">⏱️ {{ obra.duracion_minutos }} min</span>
+                </a>
+            {% empty %}
+                <div class="alert alert-light">Aún no tenemos obras registradas de este compositor.</div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="card-footer bg-light p-3">
+        <a href="{% url 'lista_compositores' %}" class="btn btn-outline-secondary">⬅ Volver a compositores</a>
+    </div>
+</div>
+{% endblock %}

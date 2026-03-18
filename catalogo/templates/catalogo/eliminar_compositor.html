@@ -1,0 +1,17 @@
+{% extends 'catalogo/base.html' %}
+{% block title %}Eliminar Compositor{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <div class="alert alert-danger shadow border-danger border-2">
+        <h4 class="alert-heading fw-bold">¡Atención, Administrador!</h4>
+        <p>¿Estás completamente seguro de que quieres borrar a <strong>{{ compositor.nombre }}</strong> del catálogo?</p>
+        <hr>
+        <p class="mb-0 text-dark">Esta acción no se puede deshacer y borrará permanentemente sus datos de la base de datos.</p>
+        <form method="post" class="mt-4">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger fw-bold">Sí, borrar definitivamente</button>
+            <a href="{% url 'lista_compositores' %}" class="btn btn-secondary ms-2">Cancelar</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

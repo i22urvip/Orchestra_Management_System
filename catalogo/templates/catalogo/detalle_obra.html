@@ -1,0 +1,61 @@
+{% extends 'catalogo/base.html' %}
+
+{% block title %}{{ obra.titulo }} - Detalles{% endblock %}
+
+{% block hero %}
+<div class="page-hero">
+    <h1>{{ obra.titulo }}</h1>
+    <p class="text-muted mb-0">Detalles de la obra y recursos (partituras, duración, instrumentos).</p>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="card shadow-musical border-0 mt-4">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center py-3">
+        <h2 class="mb-0">{{ obra.titulo }}</h2>
+        {% if request.user == obra.creador or request.user.is_superuser %}
+            <a href="{% url 'editar_obra' obra.id %}" class="btn btn-warning btn-sm fw-bold">Editar</a>
+        {% endif %}
+    </div>
+    <div class="card-body p-4">
+        <h4 class="text-secondary mb-4">Compositor: <strong>{{ obra.compositor.nombre }}</strong></h4>
+        
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><strong>Categoría:</strong> <span class="badge bg-info text-dark">{{ obra.get_tipo_display }}</span></li>
+                    <li class="list-group-item"><strong>Año de composición:</strong> {{ obra.ano_composicion }}</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><strong>Duración:</strong> {{ obra.duracion_minutos }} minutos</li>
+                    <li class="list-group-item"><strong>Instrumentos necesarios:</strong> {{ obra.num_instrumentos }}</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            {% if obra.partitura %}
+                <a href="{{ obra.partitura.url }}" target="_blank" class="btn btn-music btn-lg px-5 shadow-sm">📄 Descargar Partitura PDF</a>
+            {% else %}
+                <div class="alert alert-secondary">Todavía no se ha subido la partitura de esta obra.</div>
+            {% endif %}
+        </div>
+        {% if obra.audio %}
+        <div class="mt-4 p-3 bg-dark rounded border border-secondary">
+            <h5 class="text-light mb-3">Reproducir Obra</h5>
+            <audio controls class="w-100">
+                <source src="{{ obra.audio.url }}" type="audio/mpeg">
+                Tu navegador no soporta la reproducción de audio.
+        </audio>
+        </div>
+        {% else %}
+        <p class="text-muted mt-4">No hay archivo de audio disponible para esta obra.</p>
+        {% endif %}
+    </div>
+    <div class="card-footer bg-light p-3">
+        <a href="{% url 'lista_obras' %}" class="btn btn-outline-secondary">⬅ Volver al catálogo</a>
+    </div>
+</div>
+{% endblock %}

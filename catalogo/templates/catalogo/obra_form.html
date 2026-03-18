@@ -1,0 +1,33 @@
+{% extends 'catalogo/base.html' %}
+
+{% block title %}Formulario de Obra{% endblock %}
+
+{% block hero %}
+<div class="page-hero">
+    <h1>{% if obra %}Editar Obra{% else %}Añadir Nueva Obra{% endif %}</h1>
+    <p class="text-muted mb-0">Rellena los datos de la obra y sube la partitura si la tienes.</p>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-4 mb-5">
+    <div class="col-md-8">
+        <div class="card shadow-musical border-0 form-card">
+            <div class="card-header bg-primary text-white py-3">
+                <h3 class="mb-0">🎼 {% if obra %}Editar Obra{% else %}Añadir Nueva Obra{% endif %}</h3>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    
+                    <div class="d-flex justify-content-end gap-2 mt-4">
+                        <a href="{% url 'lista_obras' %}" class="btn btn-outline-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-music fw-bold">Guardar Obra</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'catalogo/base.html' %}
+
+{% block title %}Registro{% endblock %}
+
+{% block hero %}
+<div class="page-hero">
+    <h1>Regístrate</h1>
+    <p class="text-muted mb-0">Crea una cuenta para añadir obras y acceder a recursos privados.</p>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5 mb-5">
+    <div class="col-md-6">
+        <div class="card shadow-musical border-0 form-card">
+            <div class="card-header bg-primary text-white text-center py-3">
+                <h4 class="mb-0"> Crear una Cuenta Nueva</h4>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-music w-100 mt-3 fw-bold">Registrarme</button>
+                </form>
+                <div class="text-center mt-3">
+                    <small>¿Ya tienes cuenta? <a href="{% url 'login' %}">Inicia sesión</a></small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
