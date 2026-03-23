@@ -15,4 +15,6 @@ urlpatterns = [
     path('<int:obra_id>/', views.detalle_obra, name='detalle_obra'),
     path('<int:obra_id>/editar/', views.editar_obra, name='editar_obra'),
     path('rocola/', views.vista_rocola, name='rocola'),
+    path('obra/<int:obra_id>/reportar/', views.crear_reporte, name='crear_reporte'),
+    path('admin-panel/reportes/', views.bandeja_reportes, name='bandeja_reportes'),
 ]

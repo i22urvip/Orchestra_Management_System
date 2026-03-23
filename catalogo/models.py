@@ -33,3 +33,13 @@ class Obra(models.Model):
 
     def __str__(self):
         return f"{self.titulo} - {self.compositor.nombre}"
+    
+class Reporte(models.Model):
+    obra = models.ForeignKey(Obra, on_delete=models.CASCADE, related_name='reportes')
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    motivo = models.TextField(help_text="Describe el error encontrado en la obra.")
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    resuelto = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"Reporte de {self.obra.titulo} por {self.usuario.username}"

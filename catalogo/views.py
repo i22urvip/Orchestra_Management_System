@@ -1,9 +1,9 @@
 import json
 from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.exceptions import PermissionDenied
-from .models import Obra, Compositor
-from .forms import ObraForm, RegistroForm, CompositorForm
+from .models import Obra, Compositor, Reporte
+from .forms import ObraForm, RegistroForm, CompositorForm, ReporteForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 
@@ -74,7 +74,16 @@ def editar_obra(request, obra_id):
         form = ObraForm(request.POST, request.FILES, instance=obra)
         if form.is_valid():
             form.save()
-            return redirect('detalle_obra', obra_id=obra.id)
+            reporte_id = request.GET.get('reporte')
+            if reporte_id:
+                try:
+                    reporte_obj = Reporte.objects.get(id=reporte_id)
+                    reporte_obj.resuelto = True
+                    reporte_obj.save()
+                except Reporte.DoesNotExist:
+                    pass
+            
+            return redirect('lista_obras') 
     else:
         form = ObraForm(instance=obra)
         
@@ -144,3 +153,30 @@ def vista_rocola(request):
     
     canciones_json = json.dumps(lista_canciones)
     return render(request, 'catalogo/rocola.html', {'songs_json': canciones_json})
+
+@login_required
+def crear_reporte(request, obra_id):
+    obra = get_object_or_404(Obra, id=obra_id)
+    
+    if request.method == 'POST':
+        form = ReporteForm(request.POST)
+        if form.is_valid():
+            reporte = form.save(commit=False)
+            reporte.obra = obra
+            reporte.usuario = request.user
+            reporte.save()
+            return redirect('lista_obras') 
+    else:
+        form = ReporteForm()
+        
+    return render(request, 'catalogo/reporte_form.html', {'form': form, 'obra': obra})
+
+# Función auxiliar de seguridad
+def es_admin(user):
+    return user.is_staff or user.is_superuser
+
+# Vista para el inicio del CU-15 (Solo Administradores)
+@user_passes_test(es_admin)
+def bandeja_reportes(request):
+    reportes = Reporte.objects.all().order_by('-fecha_creacion')
+    return render(request, 'catalogo/bandeja_reportes.html', {'reportes': reportes})

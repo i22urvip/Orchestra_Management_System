@@ -1,0 +1,50 @@
+{% extends 'catalogo/base.html' %}
+
+{% block title %}Bandeja de Reportes Pendientes{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <h2>Bandeja de Reportes Pendientes</h2>
+    
+    {% if reportes %}
+        <table class="table table-striped mt-3">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Obra</th>
+                    <th>Usuario</th>
+                    <th>Motivo</th>
+                    <th>Estado</th>
+                    <th>Acción</th> </tr>
+            </thead>
+            <tbody>
+                {% for reporte in reportes %}
+                <tr>
+                    <td>{{ reporte.fecha_creacion|date:"d/m/Y H:i" }}</td>
+                    <td><strong>{{ reporte.obra.titulo }}</strong></td>
+                    <td>{{ reporte.usuario.username }}</td>
+                    <td>{{ reporte.motivo }}</td>
+                    <td>
+                        {% if reporte.resuelto %}
+                            <span class="badge bg-success">Corregido</span>
+                        {% else %}
+                            <span class="badge bg-warning text-dark">Pendiente</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if not reporte.resuelto %}
+                            <a href="{% url 'editar_obra' reporte.obra.id %}?reporte={{ reporte.id }}" class="btn btn-sm btn-primary">
+                                Editar Obra
+                            </a>
+                        {% else %}
+                            <span class="text-muted">Resuelto</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-success mt-3">¡Genial! No hay reportes pendientes de revisar.</div>
+    {% endif %}
+</div>
+{% endblock %}

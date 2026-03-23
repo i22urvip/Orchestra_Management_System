@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Obra, Compositor
+from .models import Obra, Compositor, Reporte
 
 class ObraForm(forms.ModelForm):
     class Meta:
@@ -31,3 +31,8 @@ class ObraForm(forms.ModelForm):
     class Meta:
         model = Obra
         fields = '__all__'
+
+class ReporteForm(forms.ModelForm):
+    class Meta:
+        model = Reporte
+        fields = ['motivo']

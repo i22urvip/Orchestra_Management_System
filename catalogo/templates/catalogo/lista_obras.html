@@ -92,4 +92,12 @@
     {% endfor %}
 </div>
 
+{% if user.is_staff or user.is_superuser %}
+    <div class="mb-4">
+        <a href="{% url 'bandeja_reportes' %}" class="btn btn-outline-danger">
+            Bandeja de Reportes
+        </a>
+    </div>
+{% endif %}
+
 {% endblock %}

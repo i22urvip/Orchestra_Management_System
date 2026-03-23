@@ -1,0 +1,17 @@
+{% extends 'catalogo/base.html' %}
+
+{% block title %}Reportar Error - {{ obra.titulo }}{% endblock %}
+
+{% block hero %}
+<div class="container mt-5">
+    <h2>Reportar un problema con: {{ obra.titulo }}</h2>
+    <p>Por favor, describe qué información es incorrecta o qué archivo falla.</p>
+    
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-danger">Enviar Reporte</button>
+        <a href="{% url 'lista_obras' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}
