@@ -3,44 +3,295 @@
 {% block title %}Nuestros Compositores{% endblock %}
 
 {% block hero %}
-<div class="page-hero d-flex justify-content-between align-items-center">
-    <div>
-        <h1>Nuestros Compositores</h1>
-        <p class="text-muted mb-0">Perfiles y obras asociadas de los compositores disponibles.</p>
-    </div>
-    <div>
-        <a href="{% url 'nuevo_compositor' %}" class="btn btn-music me-2">+ Añadir Compositor</a>
-        <a href="{% url 'lista_obras' %}" class="btn btn-volver">Volver al catálogo</a>
+<div class="page-hero composers-hero">
+    <div class="row align-items-center g-5 w-100">
+        <div class="col-lg-8">
+            <span class="hero-kicker">Galería de autores</span>
+            <h1>Compositores</h1>
+            <p>
+                Una colección de autores organizada con una presencia más editorial, pensada para consultar sus perfiles
+                y acceder de forma elegante a las obras asociadas.
+            </p>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="hero-actions">
+                <a href="{% url 'nuevo_compositor' %}" class="btn btn-music">
+                    <i class="bi bi-plus-lg me-1"></i> Añadir compositor
+                </a>
+                <a href="{% url 'lista_obras' %}" class="btn btn-outline-light">
+                    <i class="bi bi-arrow-left me-1"></i> Catálogo
+                </a>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
 
 {% block content %}
-<div class="row">
+
+<section class="composers-intro">
+    <div>
+        <span class="section-label">
+            <i class="bi bi-person-lines-fill"></i> Archivo de compositores
+        </span>
+        <h2>Maestros del repertorio</h2>
+    </div>
+
+    <p>
+        Cada compositor actúa como una puerta de entrada a sus obras, época y contexto musical dentro del catálogo.
+    </p>
+</section>
+
+<section class="composers-grid">
     {% for comp in compositores %}
-        <div class="col-md-4 mb-4">
-            
-            <div class="card shadow-musical h-100 border-0 border-start border-primary border-4 zoom-hover">
-                <div class="card-body d-flex flex-column justify-content-center">
-                    <h4 class="card-title fw-bold text-center mb-0">
-                        <a href="{% url 'detalle_compositor' comp.id %}" class="text-decoration-none text-primary">{{ comp.nombre }}</a>
-                    </h4>
-                    
-                    {% if comp.epoca %}
-                        <p class="text-center text-muted mt-2 mb-0"><small>Época: {{ comp.epoca }}</small></p>
-                    {% endif %}
-                    
-                    {% if request.user.is_superuser %}
-                        <div class="text-center mt-3">
-                            <a href="{% url 'eliminar_compositor' comp.id %}" class="btn btn-sm btn-outline-danger">Borrar</a>
-                        </div>
-                    {% endif %}
+        <article class="composer-tile">
+            <a href="{% url 'detalle_compositor' comp.id %}" class="composer-link" aria-label="Ver detalle de {{ comp.nombre }}"></a>
+
+            <div class="composer-ornament">𝄞</div>
+
+            <div class="composer-number">
+                {{ forloop.counter|stringformat:"02d" }}
+            </div>
+
+            <div class="composer-content">
+                <span class="composer-label">Compositor</span>
+
+                <h3>{{ comp.nombre }}</h3>
+
+                {% if comp.epoca %}
+                    <p>{{ comp.epoca }}</p>
+                {% else %}
+                    <p>Época no especificada</p>
+                {% endif %}
+
+                <div class="composer-footer">
+                    <span>Ver perfil</span>
+                    <i class="bi bi-arrow-right"></i>
                 </div>
             </div>
-            
-        </div>
+
+            {% if request.user.is_superuser %}
+                <div class="composer-admin">
+                    <a href="{% url 'eliminar_compositor' comp.id %}" class="btn btn-sm btn-outline-danger">
+                        Borrar
+                    </a>
+                </div>
+            {% endif %}
+        </article>
     {% empty %}
-        <div class="col-12"><div class="alert alert-warning">No hay compositores registrados.</div></div>
+        <div class="empty-state composers-empty">
+            <h5>No hay compositores registrados</h5>
+            <p class="mb-0">Todavía no se ha añadido ningún compositor al catálogo.</p>
+        </div>
     {% endfor %}
-</div>
+</section>
+
+<style>
+    .composers-hero {
+        min-height: 340px;
+    }
+
+    .composers-intro {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(280px, 420px);
+        gap: 2rem;
+        align-items: end;
+        margin-bottom: 1.5rem;
+        padding: 0 0.2rem;
+    }
+
+    .composers-intro h2 {
+        margin: 0;
+        color: var(--vino-oscuro);
+        font-size: clamp(2.4rem, 4vw, 4rem);
+        line-height: 0.95;
+    }
+
+    .composers-intro p {
+        margin: 0;
+        color: var(--gris);
+        line-height: 1.8;
+    }
+
+    .composers-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1.15rem;
+    }
+
+    .composer-tile {
+        position: relative;
+        isolation: isolate;
+        min-height: 310px;
+        overflow: hidden;
+        padding: 1.45rem;
+        border-radius: 32px;
+        background:
+            radial-gradient(circle at 100% 0%, rgba(194, 160, 93, 0.22), transparent 30%),
+            linear-gradient(145deg, rgba(255, 250, 241, 0.97), rgba(238, 226, 209, 0.90));
+        border: 1px solid rgba(194, 160, 93, 0.26);
+        box-shadow: 0 20px 48px rgba(44, 24, 18, 0.10);
+        transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    }
+
+    .composer-tile::before {
+        content: "";
+        position: absolute;
+        inset: 14px;
+        border: 1px solid rgba(194, 160, 93, 0.16);
+        border-radius: 24px;
+        pointer-events: none;
+        z-index: -1;
+    }
+
+    .composer-tile::after {
+        content: "";
+        position: absolute;
+        left: 1.45rem;
+        right: 1.45rem;
+        bottom: 1.45rem;
+        height: 1px;
+        background: linear-gradient(90deg, rgba(194,160,93,0.65), transparent);
+        opacity: 0.75;
+        z-index: -1;
+    }
+
+    .composer-tile:hover {
+        transform: translateY(-7px);
+        border-color: rgba(194, 160, 93, 0.48);
+        box-shadow: 0 32px 68px rgba(33, 7, 15, 0.16);
+    }
+
+    .composer-link {
+        position: absolute;
+        inset: 0;
+        z-index: 4;
+    }
+
+    .composer-ornament {
+        position: absolute;
+        right: 1.2rem;
+        bottom: -1.8rem;
+        color: rgba(91, 16, 36, 0.055);
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 8.4rem;
+        line-height: 1;
+        z-index: -1;
+    }
+
+    .composer-number {
+        position: absolute;
+        top: 1.35rem;
+        right: 1.55rem;
+        color: rgba(91, 16, 36, 0.15);
+        font-family: 'Cinzel', serif;
+        font-size: 2rem;
+        font-weight: 700;
+        line-height: 1;
+    }
+
+    .composer-content {
+        position: relative;
+        z-index: 2;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        padding-top: 1.2rem;
+    }
+
+    .composer-label {
+        width: fit-content;
+        margin-bottom: 1.4rem;
+        padding: 0.42rem 0.78rem;
+        border-radius: 999px;
+        color: #765729;
+        background: rgba(194, 160, 93, 0.15);
+        border: 1px solid rgba(194, 160, 93, 0.24);
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+
+    .composer-content h3 {
+        margin: 0 2.6rem 0.8rem 0;
+        color: var(--vino-oscuro);
+        font-size: clamp(2rem, 3vw, 3.1rem);
+        line-height: 0.95;
+    }
+
+    .composer-content p {
+        margin: 0;
+        color: var(--gris);
+        line-height: 1.7;
+    }
+
+    .composer-footer {
+        margin-top: auto;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        width: fit-content;
+        color: var(--vino);
+        font-size: 0.92rem;
+        font-weight: 750;
+        letter-spacing: 0.02em;
+        transition: transform 0.22s ease;
+    }
+
+    .composer-tile:hover .composer-footer {
+        transform: translateX(4px);
+    }
+
+    .composer-admin {
+        position: absolute;
+        left: 1.45rem;
+        bottom: 1.2rem;
+        z-index: 5;
+    }
+
+    .composer-admin .btn {
+        position: relative;
+        z-index: 6;
+    }
+
+    .composer-admin + .composer-content .composer-footer {
+        margin-bottom: 2.5rem;
+    }
+
+    .composers-empty {
+        grid-column: 1 / -1;
+        min-height: 240px;
+        display: grid;
+        place-items: center;
+    }
+
+    .composers-empty h5 {
+        color: var(--vino-oscuro);
+        font-size: 2rem;
+    }
+
+    @media (max-width: 1199.98px) {
+        .composers-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .composers-intro {
+            grid-template-columns: 1fr;
+            gap: 0.8rem;
+        }
+    }
+
+    @media (max-width: 767.98px) {
+        .composers-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .composer-tile {
+            min-height: 260px;
+        }
+    }
+</style>
+
 {% endblock %}

@@ -3,63 +3,412 @@
 {% block title %}{{ obra.titulo }} - Detalles{% endblock %}
 
 {% block hero %}
-<div class="page-hero">
-    <h1>{{ obra.titulo }}</h1>
-    <p class="text-muted mb-0">Detalles de la obra y recursos (partituras, duración, instrumentos).</p>
+<div class="page-hero obra-hero">
+    <div class="row align-items-end g-5 w-100">
+        <div class="col-lg-8">
+            <span class="hero-kicker">Ficha de repertorio</span>
+            <h1>{{ obra.titulo }}</h1>
+            <p>
+                Detalle completo de la obra, compositor, duración, recursos disponibles y datos musicales esenciales.
+            </p>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="hero-actions">
+                {% if request.user == obra.creador or request.user.is_superuser %}
+                    <a href="{% url 'editar_obra' obra.id %}" class="btn btn-warning">
+                        <i class="bi bi-pencil-square me-1"></i> Editar obra
+                    </a>
+                {% endif %}
+                <a href="{% url 'lista_obras' %}" class="btn btn-outline-light">
+                    <i class="bi bi-arrow-left me-1"></i> Volver
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
 
 {% block content %}
-<div class="card shadow-musical border-0 mt-4">
-    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center py-3">
-        <h2 class="mb-0">{{ obra.titulo }}</h2>
-        {% if request.user == obra.creador or request.user.is_superuser %}
-            <a href="{% url 'editar_obra' obra.id %}" class="btn btn-warning btn-sm fw-bold">Editar</a>
-        {% endif %}
-    </div>
-    <div class="card-body p-4">
-        <h4 class="text-secondary mb-4">Compositor: <strong>{{ obra.compositor.nombre }}</strong></h4>
-        
-        <div class="row mb-4">
-            <div class="col-md-6">
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item"><strong>Categoría:</strong> <span class="badge bg-info text-dark">{{ obra.get_tipo_display }}</span></li>
-                    <li class="list-group-item"><strong>Año de composición:</strong> {{ obra.ano_composicion }}</li>
-                </ul>
-            </div>
-            <div class="col-md-6">
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item"><strong>Duración:</strong> {{ obra.duracion_minutos }} minutos</li>
-                    <li class="list-group-item"><strong>Instrumentos necesarios:</strong> {{ obra.num_instrumentos }}</li>
-                </ul>
-            </div>
-        </div>
 
-        <div class="text-center mt-4">
-            {% if obra.partitura %}
-                <a href="{{ obra.partitura.url }}" target="_blank" class="btn btn-music btn-lg px-5 shadow-sm">📄 Descargar Partitura PDF</a>
-            {% else %}
-                <div class="alert alert-secondary">Todavía no se ha subido la partitura de esta obra.</div>
-            {% endif %}
+<section class="obra-detail-layout">
+    <aside class="obra-aside">
+        <div class="composer-card">
+            <span class="section-label">
+                <i class="bi bi-person-vcard"></i> Compositor
+            </span>
+
+            <h2>{{ obra.compositor.nombre }}</h2>
+
+            <div class="composer-divider"></div>
+
+            <div class="obra-meta-list">
+                <div>
+                    <span>Categoría</span>
+                    <strong>{{ obra.get_tipo_display }}</strong>
+                </div>
+                <div>
+                    <span>Año</span>
+                    <strong>{{ obra.ano_composicion }}</strong>
+                </div>
+                <div>
+                    <span>Duración</span>
+                    <strong>{{ obra.duracion_minutos }} minutos</strong>
+                </div>
+                <div>
+                    <span>Instrumentos</span>
+                    <strong>{{ obra.num_instrumentos }}</strong>
+                </div>
+            </div>
         </div>
-        {% if obra.audio %}
-        <div class="mt-4 p-3 bg-dark rounded border border-secondary">
-            <h5 class="text-light mb-3">Reproducir Obra</h5>
-            <audio controls class="w-100">
-                <source src="{{ obra.audio.url }}" type="audio/mpeg">
-                Tu navegador no soporta la reproducción de audio.
-        </audio>
-        </div>
-        {% else %}
-        <p class="text-muted mt-4">No hay archivo de audio disponible para esta obra.</p>
-        {% endif %}
-    </div>
-    <div class="card-footer bg-light p-3 d-flex justify-content-between align-items-center">
-        <a href="{% url 'lista_obras' %}" class="btn btn-outline-secondary">⬅ Volver al catálogo</a>
-        {% if user.is_authenticated %}
-        <a href="{% url 'crear_reporte' obra.id %}" class="btn btn-warning btn-sm mt-2">⚠️ Reportar Error
-        </a>
-        {% endif %}
-    </div>
-</div>
+    </aside>
+
+    <main class="obra-main">
+        <article class="program-card">
+            <div class="program-header">
+                <div>
+                    <span class="section-label">
+                        <i class="bi bi-journal-music"></i> Programa
+                    </span>
+                    <h2>{{ obra.titulo }}</h2>
+                </div>
+
+                <div class="program-mark">
+                    𝄞
+                </div>
+            </div>
+
+            <div class="program-body">
+                <div class="program-copy">
+                    <p>
+                        Esta ficha reúne la información principal de la obra para facilitar su consulta dentro del catálogo.
+                    </p>
+                </div>
+
+                <div class="resource-grid">
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="bi bi-file-earmark-pdf"></i>
+                        </div>
+
+                        <div>
+                            <h3>Partitura</h3>
+                            {% if obra.partitura %}
+                                <p>La partitura está disponible para consulta o descarga.</p>
+                                <a href="{{ obra.partitura.url }}" target="_blank" class="btn btn-music">
+                                    Descargar PDF
+                                </a>
+                            {% else %}
+                                <p class="mb-0">Todavía no se ha subido la partitura de esta obra.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="bi bi-volume-up"></i>
+                        </div>
+
+                        <div class="w-100">
+                            <h3>Audio</h3>
+                            {% if obra.audio %}
+                                <p>Archivo de audio asociado a esta obra.</p>
+                                <audio controls class="w-100">
+                                    <source src="{{ obra.audio.url }}" type="audio/mpeg">
+                                    Tu navegador no soporta la reproducción de audio.
+                                </audio>
+                            {% else %}
+                                <p class="mb-0">No hay archivo de audio disponible para esta obra.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="program-footer">
+                <a href="{% url 'lista_obras' %}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-1"></i> Volver al catálogo
+                </a>
+
+                {% if user.is_authenticated %}
+                    <a href="{% url 'crear_reporte' obra.id %}" class="btn btn-warning">
+                        <i class="bi bi-exclamation-triangle me-1"></i> Reportar error
+                    </a>
+                {% endif %}
+            </div>
+        </article>
+    </main>
+</section>
+
+<style>
+    .obra-hero {
+        min-height: 360px;
+    }
+
+    .obra-detail-layout {
+        display: grid;
+        grid-template-columns: minmax(280px, 370px) 1fr;
+        gap: 1.6rem;
+        align-items: start;
+    }
+
+    .obra-aside {
+        position: sticky;
+        top: 1.5rem;
+    }
+
+    .composer-card {
+        position: relative;
+        overflow: hidden;
+        padding: 2rem;
+        border-radius: 32px;
+        color: #fff8ec;
+        background:
+            radial-gradient(circle at top right, rgba(225, 200, 137, 0.24), transparent 34%),
+            linear-gradient(155deg, rgba(33, 7, 15, 0.98), rgba(91, 16, 36, 0.94));
+        border: 1px solid rgba(225, 200, 137, 0.30);
+        box-shadow: 0 26px 62px rgba(33, 7, 15, 0.20);
+    }
+
+    .composer-card::before {
+        content: "";
+        position: absolute;
+        inset: 14px;
+        border: 1px solid rgba(225, 200, 137, 0.20);
+        border-radius: 24px;
+        pointer-events: none;
+    }
+
+    .composer-card::after {
+        content: "𝄢";
+        position: absolute;
+        right: 1.2rem;
+        bottom: -1.4rem;
+        color: rgba(255, 248, 236, 0.08);
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 8rem;
+        line-height: 1;
+    }
+
+    .composer-card .section-label,
+    .composer-card h2,
+    .composer-card span,
+    .composer-card strong {
+        position: relative;
+        z-index: 1;
+    }
+
+    .composer-card .section-label {
+        color: var(--oro-suave);
+    }
+
+    .composer-card h2 {
+        margin-bottom: 1.1rem;
+        color: #fff8ec;
+        font-size: clamp(2.2rem, 4vw, 3.4rem);
+        line-height: 0.96;
+    }
+
+    .composer-divider {
+        position: relative;
+        z-index: 1;
+        height: 1px;
+        margin: 1.4rem 0;
+        background: linear-gradient(90deg, rgba(225, 200, 137, 0.80), transparent);
+    }
+
+    .obra-meta-list {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        gap: 0.9rem;
+    }
+
+    .obra-meta-list div {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        padding-bottom: 0.8rem;
+        border-bottom: 1px solid rgba(225, 200, 137, 0.18);
+    }
+
+    .obra-meta-list div:last-child {
+        padding-bottom: 0;
+        border-bottom: none;
+    }
+
+    .obra-meta-list span {
+        color: rgba(255, 248, 236, 0.68);
+        font-size: 0.92rem;
+    }
+
+    .obra-meta-list strong {
+        color: #fff8ec;
+        text-align: right;
+        font-size: 0.95rem;
+    }
+
+    .obra-main {
+        min-width: 0;
+    }
+
+    .program-card {
+        position: relative;
+        overflow: hidden;
+        border-radius: 34px;
+        background:
+            radial-gradient(circle at top right, rgba(194, 160, 93, 0.18), transparent 30%),
+            linear-gradient(180deg, rgba(255, 250, 241, 0.97), rgba(238, 226, 209, 0.90));
+        border: 1px solid rgba(194, 160, 93, 0.28);
+        box-shadow: 0 24px 58px rgba(44, 24, 18, 0.12);
+    }
+
+    .program-card::before {
+        content: "";
+        position: absolute;
+        inset: 16px;
+        border: 1px solid rgba(194, 160, 93, 0.16);
+        border-radius: 25px;
+        pointer-events: none;
+    }
+
+    .program-header {
+        position: relative;
+        padding: 2rem 2rem 1.2rem;
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        border-bottom: 1px solid rgba(194, 160, 93, 0.20);
+    }
+
+    .program-header h2 {
+        margin: 0;
+        color: var(--vino-oscuro);
+        font-size: clamp(2.3rem, 4vw, 4.4rem);
+        line-height: 0.95;
+    }
+
+    .program-mark {
+        flex: 0 0 auto;
+        width: 82px;
+        height: 82px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        color: var(--oro);
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 3rem;
+        background: rgba(194, 160, 93, 0.10);
+        border: 1px solid rgba(194, 160, 93, 0.28);
+    }
+
+    .program-body {
+        position: relative;
+        padding: 2rem;
+    }
+
+    .program-copy {
+        max-width: 720px;
+        margin-bottom: 1.5rem;
+    }
+
+    .program-copy p {
+        margin: 0;
+        color: var(--gris);
+        font-size: 1.04rem;
+        line-height: 1.8;
+    }
+
+    .resource-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
+    }
+
+    .resource-card {
+        display: flex;
+        gap: 1rem;
+        align-items: flex-start;
+        min-height: 230px;
+        padding: 1.35rem;
+        border-radius: 26px;
+        background:
+            linear-gradient(145deg, rgba(255, 250, 241, 0.86), rgba(246, 238, 225, 0.82));
+        border: 1px solid rgba(194, 160, 93, 0.20);
+        box-shadow: 0 16px 34px rgba(44, 24, 18, 0.07);
+    }
+
+    .resource-icon {
+        flex: 0 0 auto;
+        width: 52px;
+        height: 52px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        color: var(--vino);
+        background: rgba(91, 16, 36, 0.08);
+        border: 1px solid rgba(91, 16, 36, 0.12);
+        font-size: 1.35rem;
+    }
+
+    .resource-card h3 {
+        margin-bottom: 0.6rem;
+        color: var(--vino-oscuro);
+        font-size: 2rem;
+        line-height: 1;
+    }
+
+    .resource-card p {
+        color: var(--gris);
+        line-height: 1.7;
+    }
+
+    .resource-card audio {
+        margin-top: 0.4rem;
+        border-radius: 999px;
+    }
+
+    .program-footer {
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 0.8rem;
+        padding: 1.3rem 2rem 1.5rem;
+        border-top: 1px solid rgba(194, 160, 93, 0.20);
+        background: rgba(238, 226, 209, 0.55);
+    }
+
+    @media (max-width: 1199.98px) {
+        .obra-detail-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .obra-aside {
+            position: static;
+        }
+    }
+
+    @media (max-width: 767.98px) {
+        .resource-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .program-header {
+            flex-direction: column;
+        }
+
+        .program-mark {
+            width: 64px;
+            height: 64px;
+            font-size: 2.3rem;
+        }
+
+        .resource-card {
+            min-height: auto;
+        }
+    }
+</style>
+
 {% endblock %}

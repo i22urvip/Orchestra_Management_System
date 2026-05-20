@@ -2,161 +2,890 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}Orquesta{% endblock %}</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}El Rincón del Músico{% endblock %}</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <style>
-    /* 1. DEFINIMOS TU PALETA DE COLORES MAESTRA */
-    :root {
-        --fondo-crema: #e7e0d1;  /* Un crema muy elegante para el fondo */
-        --amarillo: #FFC001;    /* Detalles y brillos */
-        --naranja: #FF8B27;     /* Botones secundarios */
-        --rojo-vivo: #D60F36;   /* Alertas y toques de calor */
-        --burdeos: #7F072D;     /* Tu color principal (títulos, bordes fuertes) */
-        --texto-oscuro: #2b1d14; /* Un marrón muy oscuro, mejor que el negro puro */
-    }
+        :root {
+            --vino: #5b1024;
+            --vino-oscuro: #21070f;
+            --vino-profundo: #350a17;
+            --vino-luz: #8e2c45;
+            --oro: #c2a05d;
+            --oro-suave: #e1c889;
+            --marfil: #f6efe3;
+            --marfil-2: #eadcc8;
+            --papel: #fffaf1;
+            --tinta: #241b20;
+            --gris: #74696c;
+            --linea: rgba(194, 160, 93, 0.25);
+            --sombra: 0 30px 80px rgba(33, 7, 15, 0.18);
+            --sombra-suave: 0 18px 45px rgba(44, 24, 18, 0.10);
+            --radio-xl: 34px;
+            --radio-lg: 24px;
+            --radio-md: 16px;
+        }
 
-    /* 2. APLICAMOS EL FONDO Y TEXTO A TODA LA WEB */
-    body {
-        background-color: var(--fondo-crema);
-        color: var(--texto-oscuro);
-        font-family: 'Montserrat', sans-serif;
-    }
+        * {
+            box-sizing: border-box;
+        }
 
-    /* Tipografía elegante para títulos */
-    h1, h2, h3, h4, h5, h6 {
-        font-family: 'Playfair Display', serif;
-    }
+        html {
+            scroll-behavior: smooth;
+        }
 
-    /* 3. REDISEÑAMOS EL HERO (La cabecera de las páginas) */
-    .page-hero {
-        background: linear-gradient(135deg, var(--burdeos),var(--rojo-vivo));
-        color: white;
-        padding: 2rem;
-        border-radius: 10px;
-        margin-bottom: 2rem;
-        box-shadow: 0 4px 15px rgba(127, 7, 45, 0.3);
-    }
-    .page-hero h1, .page-hero p {
-        color: white !important;
-    }
+        body {
+            min-height: 100vh;
+            margin: 0;
+            color: var(--tinta);
+            font-family: 'Inter', sans-serif;
+            background:
+                radial-gradient(circle at 50% -10%, rgba(194, 160, 93, 0.30), transparent 28%),
+                radial-gradient(circle at 8% 20%, rgba(91, 16, 36, 0.16), transparent 24%),
+                radial-gradient(circle at 92% 18%, rgba(91, 16, 36, 0.14), transparent 25%),
+                linear-gradient(135deg, #f8f1e6 0%, #eadcc8 48%, #dcc5aa 100%);
+            overflow-x: hidden;
+        }
 
-    
-    .text-primary { color: var(--burdeos) !important; }
-    .border-primary { border-color: var(--burdeos) !important; }
-    .bg-primary { background-color: var(--burdeos) !important; }
-    .btn-primary { background-color: var(--burdeos); border-color: var(--burdeos); color: white; }
-    .btn-primary:hover { background-color: var(--rojo-vivo); border-color: var(--rojo-vivo); color: white;}
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background:
+                linear-gradient(90deg, rgba(255,255,255,0.18), rgba(255,255,255,0)),
+                repeating-linear-gradient(
+                    90deg,
+                    rgba(33, 7, 15, 0.025) 0,
+                    rgba(33, 7, 15, 0.025) 1px,
+                    transparent 1px,
+                    transparent 96px
+                );
+        }
 
-    .btn-success, .btn-music { background-color: var(--naranja); border-color: var(--naranja); color: white; }
-    .btn-success:hover, .btn-music:hover { background-color: #e6761b; border-color: #e6761b; color: white; }
-    .btn-outline-success { color: var(--naranja); border-color: var(--naranja); }
-    .btn-outline-success:hover { background-color: var(--naranja); color: white; }
+        body::after {
+            content: "𝄞";
+            position: fixed;
+            right: -2rem;
+            bottom: -4rem;
+            z-index: 0;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 24rem;
+            line-height: 1;
+            color: rgba(91, 16, 36, 0.045);
+            pointer-events: none;
+        }
 
-    /* Las etiquetas de las tarjetas (Badges) */
-    .badge.bg-info { background-color: var(--amarillo) !important; color: #2b1d14 !important; }
-    .badge-music{background:linear-gradient(90deg,#ffd166,#ff7b7b); color:#2b2b2b}
-    
-    /* Adaptamos las tarjetas al nuevo fondo */
-    .card {
-        background-color: white; /* Para que destaquen sobre el fondo crema */
-    }
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            letter-spacing: 0.01em;
+        }
 
-    .page-hero .btn {
-        /* La luz base (una sombra hacia fuera y otra sutil hacia dentro) */
-        box-shadow: 0 0 8px var(--naranja), inset 0 0 2px var(--naranja);
-        transition: all 0.3s ease-in-out;
-    }
-    
-   
-    
-    /* 7. BOTÓN VOLVER (Elegante y con alto contraste) */
-    .btn-volver {
-        background-color: var(--texto-oscuro); /* Fondo marrón muy oscuro */
-        color: var(--fondo-crema) !important;  /* Letras color crema */
-        border: 2px solid var(--texto-oscuro);
-        font-weight: bold;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 6px rgba(43, 29, 20, 0.2);
-    }
-    
-    .btn-volver:hover {
-        background-color: var(--burdeos);      /* Se vuelve burdeos al pasar el ratón */
-        border-color: var(--burdeos);
-        color: white !important;
-        transform: translateY(-2px);           /* Pequeño saltito */
-        box-shadow: 0 6px 15px rgba(127, 7, 45, 0.3);
-    }
+        a {
+            color: var(--vino);
+            text-decoration: none;
+        }
 
-    /* 8. TÍTULOS DE LAS TARJETAS (Adiós al azul por defecto) */
-    .card-title a {
-        color: var(--texto-oscuro) !important; /* Color burdeos elegante en reposo */
-        transition: color 0.3s ease-in-out;
-    }
-    
-    .card-title a:hover {
-        color: var(--naranja) !important; /* Se ilumina en naranja al pasar el ratón */
-        text-decoration: none;
-    }
+        a:hover {
+            color: var(--vino-luz);
+        }
 
-    /* 9. EL LOGO DE "LA BIBLIOTECA" (Efecto Tinta Premium) */
-    .navbar-brand {
-        font-size: 1.8rem !important;      /* Lo hacemos más grande e imponente */
-        font-family: 'Georgia', serif;     /* Letra clásica, con remates, estilo libro antiguo */
-        font-weight: 900 !important;       /* Extra negrita */
-        text-transform: uppercase;         /* Todo en mayúsculas para dar autoridad */
-        letter-spacing: 2px;               /* Separamos un poco las letras */
-        
-        /* Aquí viene la magia: pintamos la letra con un degradado de tus colores */
-        background: linear-gradient(45deg, var(--fondo-crema), var(--naranja), var(--rojo-vivo));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        
-        transition: transform 0.3s ease, filter 0.3s ease;
-    }
+        .text-primary {
+            color: var(--vino) !important;
+        }
 
-    .navbar-brand:hover {
-        transform: scale(1.05);            /* Un pequeño zoom al pasar el ratón */
-        filter: drop-shadow(0px 4px 6px rgba(199, 184, 187, 0.4)); /* Sombra rojiza brillante */
-    }
-</style>
+        .text-muted {
+            color: var(--gris) !important;
+        }
+
+        .site-shell {
+            position: relative;
+            z-index: 1;
+            width: min(1420px, calc(100% - 32px));
+            margin: 18px auto 32px;
+            border-radius: 38px;
+            background:
+                linear-gradient(180deg, rgba(255, 250, 241, 0.84), rgba(246, 239, 227, 0.74));
+            border: 1px solid rgba(255, 255, 255, 0.55);
+            box-shadow: var(--sombra);
+            backdrop-filter: blur(14px);
+            overflow: hidden;
+        }
+
+        .site-shell::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            border-radius: 38px;
+            border: 1px solid rgba(194, 160, 93, 0.18);
+        }
+
+        .site-navbar {
+            position: relative;
+            padding: 1.15rem 0;
+            background:
+                linear-gradient(90deg, rgba(33, 7, 15, 0.98), rgba(91, 16, 36, 0.96), rgba(33, 7, 15, 0.98));
+            border-bottom: 1px solid rgba(194, 160, 93, 0.34);
+        }
+
+        .site-navbar::after {
+            content: "";
+            position: absolute;
+            left: 9%;
+            right: 9%;
+            bottom: -1px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--oro-suave), transparent);
+        }
+
+        .brand-mark {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .brand-seal {
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            color: var(--oro-suave);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.9rem;
+            border: 1px solid rgba(225, 200, 137, 0.55);
+            background:
+                radial-gradient(circle, rgba(225, 200, 137, 0.12), transparent 62%),
+                rgba(255, 255, 255, 0.04);
+            box-shadow: inset 0 0 18px rgba(225, 200, 137, 0.08);
+        }
+
+        .navbar-brand {
+            margin: 0;
+            color: #fff7eb !important;
+            font-family: 'Cinzel', serif;
+            font-size: clamp(1.35rem, 2vw, 2rem);
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            line-height: 1;
+        }
+
+        .brand-subtitle {
+            display: block;
+            margin-top: 0.38rem;
+            color: rgba(255, 247, 235, 0.66);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.68rem;
+            font-weight: 500;
+            letter-spacing: 0.24em;
+            text-transform: uppercase;
+        }
+
+        .topbar-user {
+            color: rgba(255, 247, 235, 0.86);
+            font-size: 0.92rem;
+        }
+
+        .content-wrap {
+            position: relative;
+            padding: 2.5rem clamp(1rem, 3vw, 2.6rem) 2.4rem;
+        }
+
+        .content-wrap::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: clamp(1rem, 3vw, 2.6rem);
+            right: clamp(1rem, 3vw, 2.6rem);
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(194,160,93,0.38), transparent);
+        }
+
+        .btn {
+            border-radius: 999px;
+            padding: 0.78rem 1.35rem;
+            font-weight: 650;
+            letter-spacing: 0.01em;
+            transition: transform 0.22s ease, box-shadow 0.22s ease, background 0.22s ease, border-color 0.22s ease;
+        }
+
+        .btn-sm {
+            padding: 0.48rem 0.95rem;
+            font-size: 0.86rem;
+        }
+
+        .btn-primary,
+        .btn-music {
+            color: #fff9ef;
+            border: 1px solid rgba(225, 200, 137, 0.38);
+            background:
+                linear-gradient(135deg, var(--vino-profundo), var(--vino), var(--vino-luz));
+            box-shadow: 0 14px 28px rgba(91, 16, 36, 0.22);
+        }
+
+        .btn-primary:hover,
+        .btn-music:hover,
+        .btn-primary:focus,
+        .btn-music:focus {
+            color: #fff;
+            border-color: rgba(225, 200, 137, 0.72);
+            transform: translateY(-2px);
+            box-shadow: 0 22px 40px rgba(91, 16, 36, 0.28);
+        }
+
+        .btn-outline-light {
+            color: #fff7eb;
+            border-color: rgba(255, 247, 235, 0.50);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .btn-outline-light:hover,
+        .btn-outline-light:focus {
+            color: #fff;
+            border-color: rgba(225, 200, 137, 0.80);
+            background: rgba(255, 255, 255, 0.13);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline-secondary,
+        .btn-volver {
+            color: var(--vino-oscuro);
+            border-color: rgba(91, 16, 36, 0.18);
+            background: rgba(255, 250, 241, 0.62);
+        }
+
+        .btn-outline-secondary:hover,
+        .btn-outline-secondary:focus,
+        .btn-volver:hover,
+        .btn-volver:focus {
+            color: var(--vino);
+            border-color: rgba(194, 160, 93, 0.48);
+            background: var(--papel);
+            box-shadow: 0 14px 26px rgba(44, 24, 18, 0.10);
+            transform: translateY(-1px);
+        }
+
+        .btn-warning {
+            color: #fff;
+            border-color: #b08a43;
+            background: linear-gradient(135deg, #d2ac62, #ad803a);
+        }
+
+        .btn-danger {
+            color: #fff;
+            border-color: #842136;
+            background: linear-gradient(135deg, #7b1d31, #a8334b);
+        }
+
+        .btn-outline-danger {
+            color: #8b2437;
+            border-color: rgba(139, 36, 55, 0.26);
+            background: rgba(255, 250, 241, 0.64);
+        }
+
+        .btn-outline-danger:hover,
+        .btn-outline-danger:focus {
+            color: #fff;
+            background: #8b2437;
+            border-color: #8b2437;
+        }
+
+        .page-hero {
+            position: relative;
+            isolation: isolate;
+            overflow: hidden;
+            margin-bottom: 2.4rem;
+            padding: clamp(2rem, 4vw, 4.2rem);
+            min-height: 310px;
+            display: flex;
+            align-items: center;
+            border-radius: 34px;
+            color: #fff8ec;
+            background:
+                linear-gradient(90deg, rgba(33, 7, 15, 0.94) 0%, rgba(91, 16, 36, 0.88) 47%, rgba(33, 7, 15, 0.78) 100%),
+                radial-gradient(circle at 78% 26%, rgba(225, 200, 137, 0.34), transparent 27%);
+            box-shadow: 0 30px 70px rgba(33, 7, 15, 0.22);
+            border: 1px solid rgba(225, 200, 137, 0.30);
+        }
+
+        .page-hero::before {
+            content: "";
+            position: absolute;
+            inset: 18px;
+            border: 1px solid rgba(225, 200, 137, 0.24);
+            border-radius: 24px;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .page-hero::after {
+            content: "";
+            position: absolute;
+            right: -120px;
+            top: -120px;
+            width: 420px;
+            height: 420px;
+            border-radius: 50%;
+            background:
+                radial-gradient(circle, rgba(225,200,137,0.20), transparent 58%);
+            z-index: -1;
+        }
+
+        .page-hero h1,
+        .page-hero h2,
+        .page-hero h3,
+        .page-hero p,
+        .page-hero .text-muted,
+        .page-hero .hero-kicker {
+            color: #fff8ec !important;
+            position: relative;
+            z-index: 1;
+        }
+
+        .page-hero h1 {
+            max-width: 850px;
+            margin-bottom: 1rem;
+            font-size: clamp(3rem, 6vw, 6.4rem);
+            line-height: 0.9;
+            font-weight: 700;
+        }
+
+        .page-hero p {
+            max-width: 720px;
+            margin-bottom: 0;
+            color: rgba(255, 248, 236, 0.80) !important;
+            font-size: 1.07rem;
+            line-height: 1.85;
+        }
+
+        .hero-kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.15rem;
+            color: var(--oro-suave) !important;
+            font-family: 'Cinzel', serif;
+            font-size: 0.82rem;
+            font-weight: 600;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+        }
+
+        .hero-kicker::before {
+            content: "";
+            width: 52px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--oro-suave));
+        }
+
+        .hero-actions {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            justify-content: flex-end;
+        }
+
+        .section-card {
+            position: relative;
+            border-radius: 28px;
+            background:
+                linear-gradient(180deg, rgba(255, 250, 241, 0.94), rgba(248, 241, 230, 0.88));
+            border: 1px solid rgba(194, 160, 93, 0.25);
+            box-shadow: var(--sombra-suave);
+        }
+
+        .section-card::before {
+            content: "";
+            position: absolute;
+            left: 28px;
+            right: 28px;
+            top: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(194,160,93,0.65), transparent);
+        }
+
+        .card,
+        .table-shell,
+        .empty-state,
+        .alert {
+            border-radius: var(--radio-lg);
+        }
+
+        .card,
+        .table-shell {
+            background:
+                linear-gradient(180deg, rgba(255, 250, 241, 0.96), rgba(248, 241, 230, 0.92));
+            border: 1px solid rgba(194, 160, 93, 0.22);
+            box-shadow: var(--sombra-suave);
+        }
+
+        .shadow-musical {
+            box-shadow: var(--sombra-suave) !important;
+        }
+
+        .card {
+            overflow: hidden;
+        }
+
+        .card-header {
+            color: #fff8ec !important;
+            background:
+                linear-gradient(135deg, rgba(33, 7, 15, 0.98), rgba(91, 16, 36, 0.95)) !important;
+            border-bottom: 1px solid rgba(194, 160, 93, 0.30);
+        }
+
+        .card-footer {
+            background: rgba(238, 226, 209, 0.70) !important;
+            border-top: 1px solid rgba(194, 160, 93, 0.22);
+        }
+
+        .catalog-card {
+            position: relative;
+            height: 100%;
+            border: none !important;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+ .catalog-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    border: 1px solid rgba(194, 160, 93, 0.34);
+    pointer-events: none;
+}
+
+.catalog-card::after {
+    content: "";
+    position: absolute;
+    inset: 1px;
+    border-radius: calc(var(--radio-lg) - 1px);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    pointer-events: none;
+}
+
+        .catalog-card:hover {
+            transform: translateY(-7px);
+            box-shadow: 0 28px 58px rgba(33, 7, 15, 0.16) !important;
+        }
+
+        .card-title a {
+            color: var(--vino-oscuro) !important;
+        }
+
+        .card-title a:hover {
+            color: var(--vino-luz) !important;
+        }
+
+        .section-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.55rem;
+            margin-bottom: 1rem;
+            color: var(--oro);
+            font-family: 'Cinzel', serif;
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.17em;
+            text-transform: uppercase;
+        }
+
+        .meta-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.55rem;
+        }
+
+        .badge,
+        .badge-music,
+        .meta-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.48rem 0.82rem;
+            border-radius: 999px;
+            font-size: 0.82rem;
+            font-weight: 650;
+        }
+
+        .badge.bg-info,
+        .meta-pill--light {
+            color: #72552d !important;
+            background: rgba(194, 160, 93, 0.16) !important;
+            border: 1px solid rgba(194, 160, 93, 0.28);
+        }
+
+        .badge.bg-secondary {
+            color: var(--tinta) !important;
+            background: rgba(36, 27, 32, 0.08) !important;
+        }
+
+        .badge.bg-primary {
+            color: var(--vino) !important;
+            background: rgba(91, 16, 36, 0.10) !important;
+            border: 1px solid rgba(91, 16, 36, 0.13);
+        }
+
+        .badge.bg-success {
+            color: #2f6f58 !important;
+            background: rgba(47, 111, 88, 0.12) !important;
+        }
+
+        .badge.bg-warning {
+            color: #7a5928 !important;
+            background: rgba(194, 160, 93, 0.18) !important;
+        }
+
+        .badge.bg-light {
+            color: var(--tinta) !important;
+            background: rgba(36, 27, 32, 0.045) !important;
+        }
+
+        .badge-music {
+            color: var(--vino);
+            background: rgba(91, 16, 36, 0.08);
+            border: 1px solid rgba(91, 16, 36, 0.14);
+        }
+
+        .list-group {
+            gap: 0.8rem;
+        }
+
+        .list-group-item {
+            border: 1px solid rgba(194, 160, 93, 0.20);
+            border-radius: var(--radio-md) !important;
+            background: rgba(255, 250, 241, 0.82);
+            padding: 1.05rem 1.2rem;
+        }
+
+        .list-group-item-action:hover,
+        .list-group-item-action:focus {
+            background: #fffaf1;
+            border-color: rgba(194, 160, 93, 0.45);
+            box-shadow: 0 16px 28px rgba(44, 24, 18, 0.08);
+        }
+
+        .table-shell {
+            padding: 0.7rem;
+        }
+
+        .table {
+            margin-bottom: 0;
+            --bs-table-bg: transparent;
+            --bs-table-striped-bg: rgba(91, 16, 36, 0.025);
+            --bs-table-hover-bg: rgba(194, 160, 93, 0.08);
+            border-color: rgba(194, 160, 93, 0.20);
+        }
+
+        .table thead th {
+            color: var(--gris);
+            font-size: 0.74rem;
+            text-transform: uppercase;
+            letter-spacing: 0.13em;
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+            border-bottom-width: 1px;
+        }
+
+        .table tbody td {
+            vertical-align: middle;
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+
+        form p {
+            margin-bottom: 1.1rem;
+        }
+
+        form p label {
+            display: block;
+            margin-bottom: 0.45rem;
+            color: var(--tinta);
+            font-size: 0.92rem;
+            font-weight: 650;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="number"],
+        input[type="file"],
+        input[type="search"],
+        select,
+        textarea,
+        .form-control,
+        .form-select {
+            width: 100%;
+            min-height: 52px;
+            padding: 0.8rem 1rem;
+            color: var(--tinta);
+            border-radius: 17px;
+            border: 1px solid rgba(91, 16, 36, 0.14);
+            background: rgba(255, 250, 241, 0.88);
+            box-shadow: inset 0 1px 1px rgba(33, 7, 15, 0.035);
+        }
+
+        textarea {
+            min-height: 140px;
+            resize: vertical;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus,
+        .form-control:focus,
+        .form-select:focus {
+            border-color: rgba(194, 160, 93, 0.60);
+            background: #fffaf1;
+            box-shadow: 0 0 0 0.22rem rgba(194, 160, 93, 0.15);
+        }
+
+        .form-intro {
+            color: var(--gris);
+            line-height: 1.7;
+            margin-bottom: 1.6rem;
+        }
+
+        .helptext,
+        form p span.helptext,
+        form p small,
+        ul.errorlist,
+        form ul {
+            display: block;
+            margin-top: 0.35rem;
+            font-size: 0.84rem;
+        }
+
+        .helptext,
+        form p span.helptext,
+        form p small {
+            color: var(--gris);
+        }
+
+        ul.errorlist {
+            color: #8b2437;
+            padding-left: 1rem;
+            margin-bottom: 0;
+        }
+
+        .detail-block {
+            height: 100%;
+            padding: 1.3rem;
+            border-radius: 22px;
+            border: 1px solid rgba(194, 160, 93, 0.20);
+            background:
+                linear-gradient(180deg, rgba(255,250,241,0.76), rgba(238,226,209,0.72));
+        }
+
+        .detail-list {
+            display: grid;
+            gap: 0.9rem;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .detail-list li {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            padding-bottom: 0.85rem;
+            border-bottom: 1px solid rgba(194, 160, 93, 0.18);
+        }
+
+        .detail-list li:last-child {
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .detail-label {
+            color: var(--gris);
+            font-weight: 500;
+        }
+
+        .detail-value {
+            text-align: right;
+            font-weight: 700;
+        }
+
+        .audio-box,
+        .download-box,
+        .empty-state {
+            border-radius: 24px;
+            border: 1px solid rgba(194, 160, 93, 0.22);
+            background:
+                linear-gradient(180deg, rgba(255,250,241,0.80), rgba(238,226,209,0.72));
+        }
+
+        .download-box,
+        .empty-state {
+            padding: 1.5rem;
+        }
+
+        .audio-box {
+            padding: 1.2rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: var(--gris);
+        }
+
+        .alert {
+            border: 1px solid transparent;
+            padding: 1.1rem 1.25rem;
+        }
+
+        .alert-success {
+            color: #2f6f58;
+            background: rgba(47, 111, 88, 0.10);
+            border-color: rgba(47, 111, 88, 0.16);
+        }
+
+        .alert-warning {
+            color: #7a5928;
+            background: rgba(194, 160, 93, 0.14);
+            border-color: rgba(194, 160, 93, 0.20);
+        }
+
+        .alert-danger {
+            color: #8b2437;
+            background: rgba(139, 36, 55, 0.08);
+            border-color: rgba(139, 36, 55, 0.16);
+        }
+
+        .site-footer {
+            margin-top: 3rem;
+            padding: 1.8rem 0 0.4rem;
+            text-align: center;
+            color: var(--gris);
+            border-top: 1px solid rgba(194, 160, 93, 0.22);
+        }
+
+        .site-footer p {
+            margin-bottom: 0.35rem;
+            color: var(--vino-oscuro);
+            font-family: 'Cinzel', serif;
+            font-size: 1.05rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 991.98px) {
+            .site-shell {
+                width: min(100% - 20px, 1420px);
+                margin-top: 10px;
+                border-radius: 28px;
+            }
+
+            .brand-seal {
+                width: 46px;
+                height: 46px;
+                font-size: 1.55rem;
+            }
+
+            .page-hero {
+                min-height: auto;
+            }
+
+            .hero-actions {
+                justify-content: flex-start;
+                margin-top: 1.25rem;
+            }
+        }
+
+        @media (max-width: 575.98px) {
+            .navbar-brand {
+                font-size: 1.12rem;
+            }
+
+            .brand-subtitle {
+                font-size: 0.55rem;
+                letter-spacing: 0.16em;
+            }
+
+            .content-wrap {
+                padding: 1.4rem 0.9rem 2rem;
+            }
+
+            .page-hero {
+                padding: 1.6rem;
+                border-radius: 24px;
+            }
+
+            .page-hero::before {
+                inset: 10px;
+                border-radius: 17px;
+            }
+
+            .page-hero h1 {
+                font-size: 2.65rem;
+            }
+        }
+    </style>
+
+    {% block extra_css %}{% endblock %}
 </head>
+
 <body>
+    <div class="site-shell">
+        <nav class="navbar navbar-expand-lg site-navbar">
+            <div class="container-fluid px-4 px-lg-5">
+                <a class="navbar-brand brand-mark" href="{% url 'lista_obras' %}">
+                    <span class="brand-seal">𝄞</span>
+                    <span>
+                        El Rincón del Músico
+                        <span class="brand-subtitle">Archivo de obras y compositores</span>
+                    </span>
+                </a>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-0 shadow-sm">
-        <div class="container">
-            <a class="navbar-brand d-flex align-items-center" href="{% url 'lista_obras' %}">
-                <span class="brand-title">El Rincón del Músico</span>
-            </a>
-            <div class="d-flex text-white align-items-center">
-                {% if user.is_authenticated %}
-                    <span class="me-3">Hola, <strong>{{ user.username }}</strong></span>
-                    <form action="{% url 'logout' %}" method="POST" class="d-inline">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-sm btn-outline-light">Salir</button>
-                    </form>
-                {% else %}
-                    <a href="{% url 'login' %}" class="btn btn-sm btn-outline-light me-2">Entrar</a>
-                    <a href="{% url 'registro' %}" class="btn btn-sm btn-primary">Registro</a>
-                {% endif %}
+                <div class="d-flex align-items-center flex-wrap gap-2 ms-auto">
+                    {% if user.is_authenticated %}
+                        <span class="topbar-user me-1">Bienvenido, <strong>{{ user.username }}</strong></span>
+                        <form action="{% url 'logout' %}" method="POST" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-outline-light">Salir</button>
+                        </form>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="btn btn-sm btn-outline-light">Entrar</a>
+                        <a href="{% url 'registro' %}" class="btn btn-sm btn-primary">Registro</a>
+                    {% endif %}
+                </div>
             </div>
-        </div>
-    </nav>
+        </nav>
 
-    <div class="container mt-3">
-        {% block hero %}{% endblock %}
+        <main class="content-wrap">
+            {% block hero %}{% endblock %}
 
-        {% block content %}
-        {% endblock %}
+            {% block content %}
+            {% endblock %}
 
-        <footer class="site-footer text-center">
-            <div class="container">
-                <p class="mb-1">El Rincón del Músico — Gestión de obras musicales</p>
-                <small class="text-muted">Diseñado para catálogos, partituras y detalles musicales.</small>
-            </div>
-        </footer>
+            <footer class="site-footer">
+                <p>El Rincón del Músico</p>
+                <small>Catálogo musical con vocación editorial, presencia clásica y navegación cuidada.</small>
+            </footer>
+        </main>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    {% block extra_js %}{% endblock %}
 </body>
 </html>

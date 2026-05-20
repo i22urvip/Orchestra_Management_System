@@ -3,30 +3,270 @@
 {% block title %}Iniciar Sesión{% endblock %}
 
 {% block hero %}
-<div class="page-hero">
-    <h1>Iniciar Sesión</h1>
-    <p class="text-muted mb-0">Accede para gestionar tus obras y partituras.</p>
+<div class="page-hero auth-hero">
+    <div class="row align-items-center g-5 w-100">
+        <div class="col-lg-8">
+            <span class="hero-kicker">Acceso privado</span>
+            <h1>Entrar al archivo</h1>
+            <p>
+                Accede a tu cuenta para gestionar obras, partituras, compositores y recursos del catálogo musical.
+            </p>
+        </div>
+    </div>
 </div>
 {% endblock %}
 
 {% block content %}
-<div class="row justify-content-center mt-5">
-    <div class="col-md-5">
-            <div class="card shadow-musical border-0 form-card">
-            <div class="card-header bg-primary text-white text-center py-3">
-                <h4 class="mb-0">🔐 Entrar al Sistema</h4>
-            </div>
-            <div class="card-body p-4">
-                <form method="POST">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    <button type="submit" class="btn btn-music w-100 mt-3 fw-bold">Iniciar Sesión</button>
-                </form>
-                <div class="text-center mt-3">
-                    <small>¿No tienes cuenta? <a href="{% url 'registro' %}">Regístrate aquí</a></small>
-                </div>
-            </div>
+
+<section class="auth-layout">
+    <div class="auth-card">
+        <div class="auth-ornament">𝄞</div>
+
+        <div class="auth-header">
+            <span class="section-label">
+                <i class="bi bi-person-lock"></i> Identificación
+            </span>
+            <h2>Iniciar sesión</h2>
+            <p>
+                Introduce tus credenciales para continuar en el sistema.
+            </p>
+        </div>
+
+        <form method="POST" class="auth-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            <button type="submit" class="btn btn-music w-100 mt-3">
+                Entrar
+            </button>
+        </form>
+
+        <div class="auth-footer">
+            <span>¿No tienes cuenta?</span>
+            <a href="{% url 'registro' %}">Crear una cuenta</a>
         </div>
     </div>
-</div>
+
+    <aside class="auth-side">
+        <span class="section-label">
+            <i class="bi bi-journal-music"></i> El Rincón del Músico
+        </span>
+
+        <h2>Un espacio para custodiar repertorio con criterio.</h2>
+
+        <p>
+            Organiza obras, consulta fichas, accede a partituras y mantén el catálogo musical con una experiencia visual más cuidada.
+        </p>
+
+        <div class="auth-side-line"></div>
+
+        <div class="auth-feature">
+            <i class="bi bi-music-note-list"></i>
+            <span>Catálogo de obras</span>
+        </div>
+
+        <div class="auth-feature">
+            <i class="bi bi-person-lines-fill"></i>
+            <span>Archivo de compositores</span>
+        </div>
+
+        <div class="auth-feature">
+            <i class="bi bi-file-earmark-pdf"></i>
+            <span>Recursos y partituras</span>
+        </div>
+    </aside>
+</section>
+
+<style>
+    .auth-hero {
+        min-height: 330px;
+    }
+
+    .auth-layout {
+        display: grid;
+        grid-template-columns: minmax(320px, 520px) 1fr;
+        gap: 1.6rem;
+        align-items: stretch;
+        max-width: 1180px;
+        margin: 0 auto;
+    }
+
+    .auth-card {
+        position: relative;
+        overflow: hidden;
+        padding: clamp(1.6rem, 3vw, 2.5rem);
+        border-radius: 34px;
+        background:
+            radial-gradient(circle at top right, rgba(194, 160, 93, 0.22), transparent 34%),
+            linear-gradient(180deg, rgba(255, 250, 241, 0.97), rgba(238, 226, 209, 0.90));
+        border: 1px solid rgba(194, 160, 93, 0.28);
+        box-shadow: 0 26px 62px rgba(44, 24, 18, 0.13);
+    }
+
+    .auth-card::before {
+        content: "";
+        position: absolute;
+        inset: 16px;
+        border: 1px solid rgba(194, 160, 93, 0.16);
+        border-radius: 25px;
+        pointer-events: none;
+    }
+
+    .auth-ornament {
+        position: absolute;
+        right: 1.4rem;
+        bottom: -1.8rem;
+        color: rgba(91, 16, 36, 0.055);
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 9rem;
+        line-height: 1;
+    }
+
+    .auth-header,
+    .auth-form,
+    .auth-footer {
+        position: relative;
+        z-index: 1;
+    }
+
+    .auth-header {
+        margin-bottom: 1.5rem;
+    }
+
+    .auth-header h2 {
+        margin: 0 0 0.75rem;
+        color: var(--vino-oscuro);
+        font-size: clamp(2.4rem, 4vw, 4rem);
+        line-height: 0.95;
+    }
+
+    .auth-header p {
+        margin: 0;
+        color: var(--gris);
+        line-height: 1.7;
+    }
+
+    .auth-form form,
+    .auth-form {
+        margin: 0;
+    }
+
+    .auth-footer {
+        display: flex;
+        justify-content: center;
+        gap: 0.4rem;
+        flex-wrap: wrap;
+        margin-top: 1.4rem;
+        color: var(--gris);
+        font-size: 0.95rem;
+    }
+
+    .auth-footer a {
+        font-weight: 750;
+        color: var(--vino);
+    }
+
+    .auth-side {
+        position: relative;
+        overflow: hidden;
+        padding: clamp(1.8rem, 3vw, 2.8rem);
+        border-radius: 34px;
+        color: #fff8ec;
+        background:
+            radial-gradient(circle at 84% 16%, rgba(225, 200, 137, 0.28), transparent 34%),
+            linear-gradient(155deg, rgba(33, 7, 15, 0.98), rgba(91, 16, 36, 0.94));
+        border: 1px solid rgba(225, 200, 137, 0.30);
+        box-shadow: 0 26px 62px rgba(33, 7, 15, 0.20);
+    }
+
+    .auth-side::before {
+        content: "";
+        position: absolute;
+        inset: 16px;
+        border: 1px solid rgba(225, 200, 137, 0.20);
+        border-radius: 25px;
+        pointer-events: none;
+    }
+
+    .auth-side::after {
+        content: "𝄢";
+        position: absolute;
+        right: 1.4rem;
+        bottom: -1.8rem;
+        color: rgba(255, 248, 236, 0.075);
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 9rem;
+        line-height: 1;
+    }
+
+    .auth-side .section-label,
+    .auth-side h2,
+    .auth-side p,
+    .auth-side-line,
+    .auth-feature {
+        position: relative;
+        z-index: 1;
+    }
+
+    .auth-side .section-label {
+        color: var(--oro-suave);
+    }
+
+    .auth-side h2 {
+        max-width: 620px;
+        margin: 0 0 1rem;
+        color: #fff8ec;
+        font-size: clamp(2.4rem, 4vw, 4.4rem);
+        line-height: 0.92;
+    }
+
+    .auth-side p {
+        max-width: 560px;
+        margin: 0;
+        color: rgba(255, 248, 236, 0.76);
+        line-height: 1.85;
+    }
+
+    .auth-side-line {
+        height: 1px;
+        margin: 1.7rem 0;
+        background: linear-gradient(90deg, rgba(225, 200, 137, 0.85), transparent);
+    }
+
+    .auth-feature {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        padding: 0.85rem 0;
+        color: rgba(255, 248, 236, 0.90);
+        border-bottom: 1px solid rgba(225, 200, 137, 0.16);
+        font-weight: 600;
+    }
+
+    .auth-feature:last-child {
+        border-bottom: none;
+    }
+
+    .auth-feature i {
+        width: 38px;
+        height: 38px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        color: var(--oro-suave);
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(225, 200, 137, 0.24);
+    }
+
+    @media (max-width: 991.98px) {
+        .auth-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .auth-side {
+            order: -1;
+        }
+    }
+</style>
+
 {% endblock %}

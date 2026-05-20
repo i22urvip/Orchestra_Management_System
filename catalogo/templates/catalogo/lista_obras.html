@@ -3,101 +3,439 @@
 {% block title %}Catálogo de Obras{% endblock %}
 
 {% block hero %}
-<div class="page-hero d-flex justify-content-between align-items-center">
-    <div>
-        <h1>Catálogo Musical</h1>
-        <p class="text-muted mb-0">Descubre partituras, compositores y detalles de nuestras obras.</p>
-    </div>
-    <div>
-        <a href="{% url 'lista_compositores' %}" class="btn btn-outline-light me-2">Compositores</a>
-        <a href="{% url 'nueva_obra' %}" class="btn btn-music">+ Añadir Obra</a>
-        <a href="{% url 'rocola' %}" class="btn btn-dark text-warning border-warning shadow-sm fw-bold">
-            <i class="bi bi-music-player"></i> Ir a la Rocola Interactiva
-        </a>
+<div class="page-hero">
+    <div class="row align-items-center g-5 w-100">
+        <div class="col-lg-8">
+            <span class="hero-kicker">Temporada musical</span>
+            <h1>Catálogo de obras</h1>
+            <p>
+                Un archivo vivo de partituras, compositores y repertorio. Consulta cada obra con una presentación cuidada,
+                elegante y pensada para que la navegación se sienta como hojear un programa de concierto.
+            </p>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="hero-actions">
+                <a href="{% url 'lista_compositores' %}" class="btn btn-outline-light">
+                    <i class="bi bi-person-lines-fill me-1"></i> Compositores
+                </a>
+                <a href="{% url 'nueva_obra' %}" class="btn btn-music">
+                    <i class="bi bi-plus-lg me-1"></i> Añadir obra
+                </a>
+                <a href="{% url 'rocola' %}" class="btn btn-outline-light">
+                    <i class="bi bi-vinyl me-1"></i> Rocola
+                </a>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
 
 {% block content %}
 
+<div class="catalog-layout">
+    <aside class="catalog-panel">
+        <div class="panel-inner">
+            <span class="section-label">
+                <i class="bi bi-sliders"></i> Búsqueda
+            </span>
+
+            <h2>Afina el repertorio</h2>
+            <p>
+                Busca por título, compositor, tipo de obra o criterio de ordenación.
+            </p>
+
+            <form method="GET" action="{% url 'lista_obras' %}" class="filter-form">
+                <div class="filter-field">
+                    <label for="id_q">Título</label>
+                    <input id="id_q" type="text" name="q" class="form-control" placeholder="Buscar una obra..." value="{{ query|default_if_none:'' }}">
+                </div>
+
+                <div class="filter-field">
+                    <label for="id_compositor">Compositor</label>
+                    <select id="id_compositor" name="compositor" class="form-select">
+                        <option value="">Todos los compositores</option>
+                        {% for comp in compositores %}
+                            <option value="{{ comp.id }}" {% if comp.id|stringformat:"s" == compositor_seleccionado %}selected{% endif %}>
+                                {{ comp.nombre }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="filter-field">
+                    <label for="id_tipo">Tipo de obra</label>
+                    <select id="id_tipo" name="tipo" class="form-select">
+                        <option value="">Todos los tipos</option>
+                        {% for key, value in tipos_obra %}
+                            <option value="{{ key }}" {% if key == tipo_seleccionado %}selected{% endif %}>
+                                {{ value }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="filter-field">
+                    <label for="id_orden">Ordenar por</label>
+                    <select id="id_orden" name="orden" class="form-select">
+                        <option value="popularidad" {% if orden_seleccionado == 'popularidad' or not orden_seleccionado %}selected{% endif %}>Popularidad</option>
+                        <option value="duracion" {% if orden_seleccionado == 'duracion' %}selected{% endif %}>Duración</option>
+                        <option value="antiguedad" {% if orden_seleccionado == 'antiguedad' %}selected{% endif %}>Antigüedad</option>
+                    </select>
+                </div>
+
+                <div class="filter-actions">
+                    <button type="submit" class="btn btn-music w-100">
+                        Filtrar catálogo
+                    </button>
+                    <a href="{% url 'lista_obras' %}" class="btn btn-outline-secondary w-100">
+                        Limpiar filtros
+                    </a>
+                </div>
+            </form>
+        </div>
+    </aside>
+
+    <section class="catalog-main">
+        <div class="catalog-heading">
+            <div>
+                <span class="section-label">
+                    <i class="bi bi-music-note-beamed"></i> Repertorio disponible
+                </span>
+                <h2>Obras del catálogo</h2>
+            </div>
+
+            {% if user.is_staff or user.is_superuser %}
+                <a href="{% url 'bandeja_reportes' %}" class="btn btn-outline-danger">
+                    <i class="bi bi-exclamation-diamond me-1"></i> Bandeja de reportes
+                </a>
+            {% endif %}
+        </div>
+
+        <div class="works-grid">
+            {% for obra in obras %}
+                <article class="work-card">
+                    <a href="{% url 'detalle_obra' obra.id %}" class="work-card-link" aria-label="Ver detalle de {{ obra.titulo }}"></a>
+
+                    <div class="work-number">
+                        {{ forloop.counter|stringformat:"02d" }}
+                    </div>
+
+                    <div class="work-content">
+                        <div class="work-topline">
+                            <span>{{ obra.get_tipo_display }}</span>
+                            <span>{{ obra.duracion_minutos }} min</span>
+                        </div>
+
+                        <h3>{{ obra.titulo }}</h3>
+
+                        <p class="work-composer">
+                            {{ obra.compositor.nombre }}
+                            {% if obra.ano_composicion %}
+                                <span>· {{ obra.ano_composicion }}</span>
+                            {% endif %}
+                        </p>
+
+                        <div class="work-footer">
+                            <span class="work-pill">
+                                <i class="bi bi-eye"></i> {{ obra.popularidad }} visitas
+                            </span>
+                            <span class="work-open">
+                                Ver ficha <i class="bi bi-arrow-right"></i>
+                            </span>
+                        </div>
+                    </div>
+                </article>
+            {% empty %}
+                <div class="empty-state catalog-empty">
+                    <h5>No hay obras registradas con esos filtros</h5>
+                    <p class="mb-0">Prueba a limpiar la búsqueda o ajustar los criterios seleccionados.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+
 <style>
-    .zoom-hover {
-        /* Prepara la tarjeta para que la animación sea suave */
-        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    .catalog-layout {
+        display: grid;
+        grid-template-columns: minmax(280px, 360px) 1fr;
+        gap: 1.6rem;
+        align-items: start;
     }
-    .zoom-hover:hover {
-        /* Hace el zoom del 3% */
-        transform: scale(1.03); 
-        /* Cambia la flecha por la 'manita' para invitar a hacer clic */
-        cursor: pointer; 
-        /* Hace que la sombra sea un poco más grande al elevarse */
-        box-shadow: 0 10px 20px rgba(0,0,0,0.15) !important; 
+
+    .catalog-panel {
+        position: sticky;
+        top: 1.5rem;
+    }
+
+    .panel-inner {
+        position: relative;
+        overflow: hidden;
+        padding: 2rem;
+        border-radius: 30px;
+        background:
+            radial-gradient(circle at top right, rgba(194, 160, 93, 0.22), transparent 32%),
+            linear-gradient(180deg, rgba(255, 250, 241, 0.96), rgba(238, 226, 209, 0.88));
+        border: 1px solid rgba(194, 160, 93, 0.28);
+        box-shadow: 0 22px 50px rgba(44, 24, 18, 0.12);
+    }
+
+    .panel-inner::before {
+        content: "";
+        position: absolute;
+        inset: 14px;
+        border: 1px solid rgba(194, 160, 93, 0.18);
+        border-radius: 22px;
+        pointer-events: none;
+    }
+
+    .panel-inner h2 {
+        position: relative;
+        margin-bottom: 0.7rem;
+        color: var(--vino-oscuro);
+        font-size: 2.25rem;
+        line-height: 1;
+    }
+
+    .panel-inner p {
+        position: relative;
+        margin-bottom: 1.4rem;
+        color: var(--gris);
+        line-height: 1.7;
+    }
+
+    .filter-form {
+        position: relative;
+        display: grid;
+        gap: 1rem;
+    }
+
+    .filter-field label {
+        display: block;
+        margin-bottom: 0.45rem;
+        color: var(--vino-oscuro);
+        font-size: 0.82rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    .filter-actions {
+        display: grid;
+        gap: 0.7rem;
+        margin-top: 0.4rem;
+    }
+
+    .catalog-main {
+        min-width: 0;
+    }
+
+    .catalog-heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        gap: 1rem;
+        margin-bottom: 1.2rem;
+        padding: 0 0.2rem;
+    }
+
+    .catalog-heading h2 {
+        margin: 0;
+        color: var(--vino-oscuro);
+        font-size: clamp(2rem, 3vw, 3rem);
+        line-height: 1;
+    }
+
+    .works-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1.1rem;
+    }
+
+    .work-card {
+        position: relative;
+        isolation: isolate;
+        min-height: 235px;
+        overflow: hidden;
+        padding: 1.4rem;
+        border-radius: 30px;
+        background:
+            linear-gradient(145deg, rgba(255, 250, 241, 0.97), rgba(241, 231, 216, 0.92));
+        border: 1px solid rgba(194, 160, 93, 0.24);
+        box-shadow: 0 18px 42px rgba(44, 24, 18, 0.09);
+        transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    }
+
+    .work-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background:
+            radial-gradient(circle at 100% 0%, rgba(91, 16, 36, 0.12), transparent 28%),
+            radial-gradient(circle at 0% 100%, rgba(194, 160, 93, 0.15), transparent 28%);
+        opacity: 0.8;
+    }
+
+    .work-card::after {
+        content: "𝄢";
+        position: absolute;
+        right: 1.1rem;
+        bottom: -1.4rem;
+        z-index: -1;
+        color: rgba(91, 16, 36, 0.045);
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 7rem;
+        line-height: 1;
+    }
+
+    .work-card:hover {
+        transform: translateY(-7px);
+        border-color: rgba(194, 160, 93, 0.45);
+        box-shadow: 0 30px 64px rgba(33, 7, 15, 0.15);
+    }
+
+    .work-card-link {
+        position: absolute;
+        inset: 0;
+        z-index: 3;
+    }
+
+    .work-number {
+        position: absolute;
+        top: 1.1rem;
+        right: 1.25rem;
+        color: rgba(91, 16, 36, 0.15);
+        font-family: 'Cinzel', serif;
+        font-size: 2.2rem;
+        font-weight: 700;
+        line-height: 1;
+    }
+
+    .work-content {
+        position: relative;
+        z-index: 2;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .work-topline {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.55rem;
+        margin-bottom: 1.1rem;
+        padding-right: 3.4rem;
+    }
+
+    .work-topline span,
+    .work-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        width: fit-content;
+        padding: 0.43rem 0.72rem;
+        border-radius: 999px;
+        color: #765729;
+        background: rgba(194, 160, 93, 0.15);
+        border: 1px solid rgba(194, 160, 93, 0.23);
+        font-size: 0.78rem;
+        font-weight: 700;
+    }
+
+    .work-card h3 {
+        margin-bottom: 0.7rem;
+        padding-right: 1rem;
+        color: var(--vino-oscuro);
+        font-size: clamp(1.8rem, 2.5vw, 2.55rem);
+        line-height: 0.98;
+    }
+
+    .work-composer {
+        margin-bottom: 1.5rem;
+        color: var(--gris);
+        font-size: 0.98rem;
+        line-height: 1.6;
+    }
+
+    .work-composer span {
+        color: rgba(116, 105, 108, 0.78);
+    }
+
+    .work-footer {
+        margin-top: auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .work-open {
+        color: var(--vino);
+        font-size: 0.9rem;
+        font-weight: 750;
+        letter-spacing: 0.02em;
+        transition: transform 0.22s ease;
+    }
+
+    .work-card:hover .work-open {
+        transform: translateX(4px);
+    }
+
+    .catalog-empty {
+        grid-column: 1 / -1;
+        min-height: 220px;
+        display: grid;
+        place-items: center;
+    }
+
+    .catalog-empty h5 {
+        color: var(--vino-oscuro);
+        font-size: 2rem;
+    }
+
+    @media (max-width: 1199.98px) {
+        .catalog-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .catalog-panel {
+            position: static;
+        }
+
+        .filter-form {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .filter-actions {
+            grid-column: 1 / -1;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @media (max-width: 767.98px) {
+        .works-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .catalog-heading {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .filter-form {
+            grid-template-columns: 1fr;
+        }
+
+        .filter-actions {
+            grid-template-columns: 1fr;
+        }
+
+        .work-card {
+            min-height: 220px;
+        }
     }
 </style>
-
-<div class="card p-3 mb-4 shadow-musical border-0 form-card">
-    <form method="GET" action="{% url 'lista_obras' %}" class="row g-2 align-items-center">
-        <div class="col-md-3">
-            <input type="text" name="q" class="form-control" placeholder="Buscar título..." value="{{ query|default_if_none:'' }}">
-        </div>
-        <div class="col-md-3">
-            <select name="compositor" class="form-select">
-                <option value="">Todos los compositores</option>
-                {% for comp in compositores %}
-                    <option value="{{ comp.id }}" {% if comp.id|stringformat:"s" == compositor_seleccionado %}selected{% endif %}>{{ comp.nombre }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="col-md-2">
-            <select name="tipo" class="form-select">
-                <option value="">Tipo de obra</option>
-                {% for key, value in tipos_obra %}
-                    <option value="{{ key }}" {% if key == tipo_seleccionado %}selected{% endif %}>{{ value }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="col-md-2">
-            <select name="orden" class="form-select">
-                <option value="popularidad" {% if orden_seleccionado == 'popularidad' or not orden_seleccionado %}selected{% endif %}>🔥 Popular</option>
-                <option value="duracion" {% if orden_seleccionado == 'duracion' %}selected{% endif %}>⏱️ Duración</option>
-                <option value="antiguedad" {% if orden_seleccionado == 'antiguedad' %}selected{% endif %}>🧓 Antigüedad</option>
-            </select>
-        </div>
-        <div class="col-md-2 d-flex gap-2">
-            <button type="submit" class="btn btn-music w-100">Filtrar</button>
-            <a href="{% url 'lista_obras' %}" class="btn btn-outline-danger" title="Limpiar">X</a>
-        </div>
-    </form>
-</div>
-
-<div class="row">
-    {% for obra in obras %}
-        <div class="col-md-6 mb-4">
-            <div class="card shadow-musical h-100 border-0 border-start border-primary border-4 zoom-hover">
-                <div class="card-body">
-                    <h5 class="card-title fw-bold">
-                        <a href="{% url 'detalle_obra' obra.id %}" class="text-decoration-none">{{ obra.titulo }}</a>
-                    </h5>
-                    <h6 class="card-subtitle mb-3 text-muted">{{ obra.compositor.nombre }} ({{ obra.ano_composicion }})</h6>
-                    <p class="card-text">
-                        <span class="badge bg-info text-dark">{{ obra.get_tipo_display }}</span>
-                        <span class="badge bg-light text-dark border">⏱️ {{ obra.duracion_minutos }} min</span>
-                        <span class="badge badge-music">🔥 {{ obra.popularidad }} visitas</span>
-                    </p>
-                </div>
-            </div>
-        </div>
-    {% empty %}
-        <div class="col-12"><div class="alert alert-warning">No hay obras registradas con esos filtros.</div></div>
-    {% endfor %}
-</div>
-
-{% if user.is_staff or user.is_superuser %}
-    <div class="mb-4">
-        <a href="{% url 'bandeja_reportes' %}" class="btn btn-outline-danger">
-            Bandeja de Reportes
-        </a>
-    </div>
-{% endif %}
 
 {% endblock %}

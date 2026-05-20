@@ -3,31 +3,284 @@
 {% block title %}Formulario de Obra{% endblock %}
 
 {% block hero %}
-<div class="page-hero">
-    <h1>{% if obra %}Editar Obra{% else %}Añadir Nueva Obra{% endif %}</h1>
-    <p class="text-muted mb-0">Rellena los datos de la obra y sube la partitura si la tienes.</p>
-</div>
-{% endblock %}
+<div class="page-hero form-hero">
+    <div class="row align-items-end g-5 w-100">
+        <div class="col-lg-8">
+            <span class="hero-kicker">Gestión del repertorio</span>
+            <h1>{% if obra %}Editar obra{% else %}Nueva obra{% endif %}</h1>
+            <p>
+                Completa la información musical, documental y técnica de la obra para mantener el catálogo ordenado y cuidado.
+            </p>
+        </div>
 
-{% block content %}
-<div class="row justify-content-center mt-4 mb-5">
-    <div class="col-md-8">
-        <div class="card shadow-musical border-0 form-card">
-            <div class="card-header bg-primary text-white py-3">
-                <h3 class="mb-0">🎼 {% if obra %}Editar Obra{% else %}Añadir Nueva Obra{% endif %}</h3>
-            </div>
-            <div class="card-body p-4">
-                <form method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    
-                    <div class="d-flex justify-content-end gap-2 mt-4">
-                        <a href="{% url 'lista_obras' %}" class="btn btn-outline-secondary">Cancelar</a>
-                        <button type="submit" class="btn btn-music fw-bold">Guardar Obra</button>
-                    </div>
-                </form>
+        <div class="col-lg-4">
+            <div class="hero-actions">
+                <a href="{% url 'lista_obras' %}" class="btn btn-outline-light">
+                    <i class="bi bi-arrow-left me-1"></i> Catálogo
+                </a>
             </div>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block content %}
+
+<section class="editor-layout">
+    <aside class="editor-side">
+        <span class="section-label">
+            <i class="bi bi-journal-plus"></i> Edición
+        </span>
+
+        <h2>{% if obra %}Revisar ficha{% else %}Alta de obra{% endif %}</h2>
+
+        <p>
+            Una ficha bien documentada facilita la consulta del repertorio, la descarga de recursos y la navegación posterior por el catálogo.
+        </p>
+
+        <div class="editor-line"></div>
+
+        <div class="editor-step">
+            <span>01</span>
+            <p>Datos musicales principales.</p>
+        </div>
+
+        <div class="editor-step">
+            <span>02</span>
+            <p>Compositor, categoría y duración.</p>
+        </div>
+
+        <div class="editor-step">
+            <span>03</span>
+            <p>Partitura y audio si están disponibles.</p>
+        </div>
+    </aside>
+
+    <main class="editor-main">
+        <div class="editor-card">
+            <div class="editor-card-header">
+                <span class="section-label">
+                    <i class="bi bi-music-note-beamed"></i> Formulario
+                </span>
+
+                <h2>{% if obra %}Editar obra{% else %}Añadir nueva obra{% endif %}</h2>
+
+                <p>
+                    Revisa los campos antes de guardar. Los cambios se reflejarán directamente en el catálogo.
+                </p>
+            </div>
+
+            <form method="POST" enctype="multipart/form-data" class="editor-form">
+                {% csrf_token %}
+                {{ form.as_p }}
+
+                <div class="editor-actions">
+                    <a href="{% url 'lista_obras' %}" class="btn btn-outline-secondary">
+                        Cancelar
+                    </a>
+                    <button type="submit" class="btn btn-music">
+                        Guardar obra
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+</section>
+
+<style>
+    .form-hero {
+        min-height: 340px;
+    }
+
+    .editor-layout {
+        display: grid;
+        grid-template-columns: minmax(280px, 370px) 1fr;
+        gap: 1.6rem;
+        align-items: start;
+    }
+
+    .editor-side {
+        position: sticky;
+        top: 1.5rem;
+        overflow: hidden;
+        padding: 2rem;
+        border-radius: 34px;
+        color: #fff8ec;
+        background:
+            radial-gradient(circle at top right, rgba(225, 200, 137, 0.28), transparent 34%),
+            linear-gradient(155deg, rgba(33, 7, 15, 0.98), rgba(91, 16, 36, 0.94));
+        border: 1px solid rgba(225, 200, 137, 0.30);
+        box-shadow: 0 26px 62px rgba(33, 7, 15, 0.20);
+    }
+
+    .editor-side::before {
+        content: "";
+        position: absolute;
+        inset: 14px;
+        border: 1px solid rgba(225, 200, 137, 0.20);
+        border-radius: 25px;
+        pointer-events: none;
+    }
+
+    .editor-side::after {
+        content: "𝄞";
+        position: absolute;
+        right: 1.2rem;
+        bottom: -1.7rem;
+        color: rgba(255, 248, 236, 0.08);
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 9rem;
+        line-height: 1;
+    }
+
+    .editor-side .section-label,
+    .editor-side h2,
+    .editor-side p,
+    .editor-line,
+    .editor-step {
+        position: relative;
+        z-index: 1;
+    }
+
+    .editor-side .section-label {
+        color: var(--oro-suave);
+    }
+
+    .editor-side h2 {
+        margin: 0 0 1rem;
+        color: #fff8ec;
+        font-size: clamp(2.4rem, 4vw, 4rem);
+        line-height: 0.92;
+    }
+
+    .editor-side p {
+        color: rgba(255, 248, 236, 0.76);
+        line-height: 1.85;
+    }
+
+    .editor-line {
+        height: 1px;
+        margin: 1.6rem 0;
+        background: linear-gradient(90deg, rgba(225, 200, 137, 0.85), transparent);
+    }
+
+    .editor-step {
+        display: grid;
+        grid-template-columns: 48px 1fr;
+        gap: 0.9rem;
+        align-items: start;
+        padding: 0.85rem 0;
+        border-bottom: 1px solid rgba(225, 200, 137, 0.16);
+    }
+
+    .editor-step:last-child {
+        border-bottom: none;
+    }
+
+    .editor-step span {
+        width: 42px;
+        height: 42px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        color: var(--oro-suave);
+        border: 1px solid rgba(225, 200, 137, 0.28);
+        background: rgba(255, 255, 255, 0.06);
+        font-family: 'Cinzel', serif;
+        font-weight: 700;
+        font-size: 0.84rem;
+    }
+
+    .editor-step p {
+        margin: 0;
+        color: rgba(255, 248, 236, 0.88);
+        font-weight: 600;
+    }
+
+    .editor-main {
+        min-width: 0;
+    }
+
+    .editor-card {
+        position: relative;
+        overflow: hidden;
+        padding: clamp(1.5rem, 3vw, 2.3rem);
+        border-radius: 34px;
+        background:
+            radial-gradient(circle at top right, rgba(194, 160, 93, 0.18), transparent 30%),
+            linear-gradient(180deg, rgba(255, 250, 241, 0.97), rgba(238, 226, 209, 0.90));
+        border: 1px solid rgba(194, 160, 93, 0.28);
+        box-shadow: 0 24px 58px rgba(44, 24, 18, 0.12);
+    }
+
+    .editor-card::before {
+        content: "";
+        position: absolute;
+        inset: 16px;
+        border: 1px solid rgba(194, 160, 93, 0.15);
+        border-radius: 25px;
+        pointer-events: none;
+    }
+
+    .editor-card-header,
+    .editor-form {
+        position: relative;
+        z-index: 1;
+    }
+
+    .editor-card-header {
+        margin-bottom: 1.6rem;
+        padding-bottom: 1.2rem;
+        border-bottom: 1px solid rgba(194, 160, 93, 0.20);
+    }
+
+    .editor-card-header h2 {
+        margin: 0 0 0.7rem;
+        color: var(--vino-oscuro);
+        font-size: clamp(2.4rem, 4vw, 4rem);
+        line-height: 0.95;
+    }
+
+    .editor-card-header p {
+        max-width: 720px;
+        margin: 0;
+        color: var(--gris);
+        line-height: 1.75;
+    }
+
+    .editor-form {
+        max-width: 820px;
+    }
+
+    .editor-actions {
+        display: flex;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+        gap: 0.8rem;
+        margin-top: 1.6rem;
+        padding-top: 1.4rem;
+        border-top: 1px solid rgba(194, 160, 93, 0.18);
+    }
+
+    @media (max-width: 1199.98px) {
+        .editor-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .editor-side {
+            position: static;
+        }
+    }
+
+    @media (max-width: 575.98px) {
+        .editor-actions {
+            justify-content: stretch;
+        }
+
+        .editor-actions .btn {
+            width: 100%;
+        }
+    }
+</style>
+
 {% endblock %}
