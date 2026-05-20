@@ -132,6 +132,13 @@
             <div class="d-flex text-white align-items-center">
                 {% if user.is_authenticated %}
                     <span class="me-3">Hola, <strong>{{ user.username }}</strong></span>
+    
+                    {% if user.is_staff or user.is_superuser %}
+                        <a href="{% url 'lista_usuarios' %}" class="btn btn-sm btn-outline-light me-2">
+                            Usuarios
+                        </a>
+                    {% endif %}
+    
                     <form action="{% url 'logout' %}" method="POST" class="d-inline">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-sm btn-outline-light">Salir</button>
@@ -140,6 +147,7 @@
                     <a href="{% url 'login' %}" class="btn btn-sm btn-outline-light me-2">Entrar</a>
                     <a href="{% url 'registro' %}" class="btn btn-sm btn-primary">Registro</a>
                 {% endif %}
+                
             </div>
         </div>
     </nav>

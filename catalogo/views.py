@@ -3,9 +3,11 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.exceptions import PermissionDenied
 from .models import Obra, Compositor, Reporte
-from .forms import ObraForm, RegistroForm, CompositorForm, ReporteForm
+from .forms import ObraForm, RegistroForm, CompositorForm, ReporteForm, UsuarioAdminForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
+from django.contrib.auth.models import User
+
 
 
 def lista_obras(request):
@@ -180,3 +182,24 @@ def es_admin(user):
 def bandeja_reportes(request):
     reportes = Reporte.objects.all().order_by('-fecha_creacion')
     return render(request, 'catalogo/bandeja_reportes.html', {'reportes': reportes})
+
+
+@user_passes_test(es_admin)
+def lista_usuarios(request):
+    from django.contrib.auth.models import User
+    usuarios = User.objects.all().order_by('username')
+    return render(request, 'catalogo/lista_usuarios.html', {'usuarios': usuarios})
+
+@user_passes_test(es_admin)
+def editar_usuario(request, usuario_id):
+    from django.contrib.auth.models import User
+    from .forms import EditarUsuarioForm
+    usuario = get_object_or_404(User, id=usuario_id)
+    if request.method == 'POST':
+        form = EditarUsuarioForm(request.POST, instance=usuario)
+        if form.is_valid():
+            form.save()
+            return redirect('lista_usuarios')
+    else:
+        form = EditarUsuarioForm(instance=usuario)
+    return render(request, 'catalogo/editar_usuario.html', {'form': form, 'usuario': usuario})
