@@ -12,11 +12,14 @@
 {% block content %}
 <div class="row justify-content-center mt-5">
     <div class="col-md-5">
-            <div class="card shadow-musical border-0 form-card">
+        <div class="card shadow-musical border-0 form-card">
             <div class="card-header bg-primary text-white text-center py-3">
                 <h4 class="mb-0">🔐 Entrar al Sistema</h4>
             </div>
             <div class="card-body p-4">
+                {% for message in messages %}
+                <div class="alert alert-danger">{{ message }}</div>
+                {% endfor %}
                 <form method="POST">
                     {% csrf_token %}
                     {{ form.as_p }}

@@ -49,6 +49,13 @@
                             <a href="{% url 'editar_usuario' usuario.id %}" class="btn btn-sm btn-primary">
                                 Editar
                             </a>
+                            {% if usuario != request.user %}
+                            <a href="{% url 'eliminar_usuario' usuario.id %}" class="btn btn-sm btn-outline-danger">
+                                Eliminar
+                            </a>
+                            {% else %}
+                            <button class="btn btn-sm btn-outline-secondary" disabled>Eliminar</button>
+                            {% endif %}
                         </td>
                     </tr>
                     {% endfor %}

@@ -7,8 +7,8 @@ from .forms import ObraForm, RegistroForm, CompositorForm, ReporteForm, UsuarioA
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from django.contrib.auth.models import User
-
-
+from django.contrib.auth.views import LoginView
+from django.contrib import messages
 
 def lista_obras(request):
     query = request.GET.get('q')
@@ -203,3 +203,28 @@ def editar_usuario(request, usuario_id):
     else:
         form = EditarUsuarioForm(instance=usuario)
     return render(request, 'catalogo/editar_usuario.html', {'form': form, 'usuario': usuario})
+
+@user_passes_test(es_admin)
+def eliminar_usuario(request, usuario_id):
+    from django.contrib.auth.models import User
+    usuario = get_object_or_404(User, id=usuario_id)
+    if request.method == 'POST':
+        usuario.delete()
+        return redirect('lista_usuarios')
+    return render(request, 'catalogo/eliminar_usuario.html', {'usuario': usuario})
+
+
+class CustomLoginView(LoginView):
+    template_name = 'catalogo/login.html'
+
+    def form_invalid(self, form):
+        username = form.data.get('username')
+        if username:
+            from django.contrib.auth.models import User
+            try:
+                usuario = User.objects.get(username=username)
+                if not usuario.is_active:
+                    messages.error(self.request, 'Tu cuenta está desactivada. Contacta con el administrador.')
+            except User.DoesNotExist:
+                pass
+        return super().form_invalid(form)
