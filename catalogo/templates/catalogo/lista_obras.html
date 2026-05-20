@@ -106,9 +106,15 @@
             </div>
 
             {% if user.is_staff or user.is_superuser %}
-                <a href="{% url 'bandeja_reportes' %}" class="btn btn-outline-danger">
-                    <i class="bi bi-exclamation-diamond me-1"></i> Bandeja de reportes
-                </a>
+                <div class="admin-actions">
+                    <a href="{% url 'bandeja_reportes' %}" class="btn btn-outline-danger">
+                        <i class="bi bi-exclamation-diamond me-1"></i> Bandeja de reportes
+                    </a>
+
+                    <a href="{% url 'lista_usuarios' %}" class="btn btn-outline-secondary">
+                        <i class="bi bi-people me-1"></i> Gestionar usuarios
+                    </a>
+                </div>
             {% endif %}
         </div>
 
@@ -245,6 +251,13 @@
         color: var(--vino-oscuro);
         font-size: clamp(2rem, 3vw, 3rem);
         line-height: 1;
+    }
+
+    .admin-actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 0.75rem;
     }
 
     .works-grid {
@@ -422,6 +435,10 @@
         .catalog-heading {
             align-items: flex-start;
             flex-direction: column;
+        }
+
+        .admin-actions {
+            justify-content: flex-start;
         }
 
         .filter-form {

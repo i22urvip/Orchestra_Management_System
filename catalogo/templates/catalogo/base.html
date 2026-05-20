@@ -856,9 +856,16 @@
                     </span>
                 </a>
 
-                <div class="d-flex align-items-center flex-wrap gap-2 ms-auto">
+                       <div class="d-flex align-items-center flex-wrap gap-2 ms-auto">
                     {% if user.is_authenticated %}
                         <span class="topbar-user me-1">Bienvenido, <strong>{{ user.username }}</strong></span>
+
+                        {% if user.is_staff or user.is_superuser %}
+                            <a href="{% url 'lista_usuarios' %}" class="btn btn-sm btn-outline-light">
+                                Usuarios
+                            </a>
+                        {% endif %}
+
                         <form action="{% url 'logout' %}" method="POST" class="d-inline">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-sm btn-outline-light">Salir</button>

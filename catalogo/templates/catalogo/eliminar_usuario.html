@@ -1,0 +1,17 @@
+{% extends 'catalogo/base.html' %}
+{% block title %}Eliminar Usuario{% endblock %}
+{% block content %}
+<div class="card shadow-musical border-0 mb-5">
+    <div class="card-header bg-danger text-white py-3">
+        <h3 class="mb-0">¿Eliminar usuario?</h3>
+    </div>
+    <div class="card-body p-4">
+        <p>¿Estás seguro de que quieres eliminar al usuario <strong>{{ usuario.username }}</strong>? Esta acción no se puede deshacer.</p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+            <a href="{% url 'lista_usuarios' %}" class="btn btn-outline-secondary ms-2">Cancelar</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

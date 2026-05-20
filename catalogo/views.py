@@ -3,10 +3,12 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.exceptions import PermissionDenied
 from .models import Obra, Compositor, Reporte
-from .forms import ObraForm, RegistroForm, CompositorForm, ReporteForm
+from .forms import ObraForm, RegistroForm, CompositorForm, ReporteForm, UsuarioAdminForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
-
+from django.contrib.auth.models import User
+from django.contrib.auth.views import LoginView
+from django.contrib import messages
 
 def lista_obras(request):
     query = request.GET.get('q')
@@ -114,7 +116,7 @@ def nuevo_compositor(request):
         form = CompositorForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('catalogo/lista_compositores')
+            return redirect('lista_compositores')
     else:
         form = CompositorForm()
     return render(request, 'catalogo/nuevo_compositor.html', {'form': form})
@@ -180,3 +182,49 @@ def es_admin(user):
 def bandeja_reportes(request):
     reportes = Reporte.objects.all().order_by('-fecha_creacion')
     return render(request, 'catalogo/bandeja_reportes.html', {'reportes': reportes})
+
+
+@user_passes_test(es_admin)
+def lista_usuarios(request):
+    from django.contrib.auth.models import User
+    usuarios = User.objects.all().order_by('username')
+    return render(request, 'catalogo/lista_usuarios.html', {'usuarios': usuarios})
+
+@user_passes_test(es_admin)
+def editar_usuario(request, usuario_id):
+    from django.contrib.auth.models import User
+    from .forms import EditarUsuarioForm
+    usuario = get_object_or_404(User, id=usuario_id)
+    if request.method == 'POST':
+        form = EditarUsuarioForm(request.POST, instance=usuario)
+        if form.is_valid():
+            form.save()
+            return redirect('lista_usuarios')
+    else:
+        form = EditarUsuarioForm(instance=usuario)
+    return render(request, 'catalogo/editar_usuario.html', {'form': form, 'usuario': usuario})
+
+@user_passes_test(es_admin)
+def eliminar_usuario(request, usuario_id):
+    from django.contrib.auth.models import User
+    usuario = get_object_or_404(User, id=usuario_id)
+    if request.method == 'POST':
+        usuario.delete()
+        return redirect('lista_usuarios')
+    return render(request, 'catalogo/eliminar_usuario.html', {'usuario': usuario})
+
+
+class CustomLoginView(LoginView):
+    template_name = 'catalogo/login.html'
+
+    def form_invalid(self, form):
+        username = form.data.get('username')
+        if username:
+            from django.contrib.auth.models import User
+            try:
+                usuario = User.objects.get(username=username)
+                if not usuario.is_active:
+                    messages.error(self.request, 'Tu cuenta está desactivada. Contacta con el administrador.')
+            except User.DoesNotExist:
+                pass
+        return super().form_invalid(form)

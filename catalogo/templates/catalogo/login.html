@@ -17,6 +17,7 @@
 {% endblock %}
 
 {% block content %}
+{% block content %}
 
 <section class="auth-layout">
     <div class="auth-card">
@@ -32,6 +33,12 @@
             </p>
         </div>
 
+        {% for message in messages %}
+            <div class="alert alert-danger auth-message">
+                {{ message }}
+            </div>
+        {% endfor %}
+
         <form method="POST" class="auth-form">
             {% csrf_token %}
             {{ form.as_p }}
@@ -44,6 +51,38 @@
         <div class="auth-footer">
             <span>¿No tienes cuenta?</span>
             <a href="{% url 'registro' %}">Crear una cuenta</a>
+        </div>
+    </div>
+
+    <aside class="auth-side">
+        <span class="section-label">
+            <i class="bi bi-journal-music"></i> El Rincón del Músico
+        </span>
+
+        <h2>Un espacio para custodiar repertorio con criterio.</h2>
+
+        <p>
+            Organiza obras, consulta fichas, accede a partituras y mantén el catálogo musical con una experiencia visual más cuidada.
+        </p>
+
+        <div class="auth-side-line"></div>
+
+        <div class="auth-feature">
+            <i class="bi bi-music-note-list"></i>
+            <span>Catálogo de obras</span>
+        </div>
+
+        <div class="auth-feature">
+            <i class="bi bi-person-lines-fill"></i>
+            <span>Archivo de compositores</span>
+        </div>
+
+        <div class="auth-feature">
+            <i class="bi bi-file-earmark-pdf"></i>
+            <span>Recursos y partituras</span>
+        </div>
+    </aside>
+</section>
         </div>
     </div>
 
@@ -246,6 +285,11 @@
     .auth-feature:last-child {
         border-bottom: none;
     }
+    .auth-message {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 1rem;
+}
 
     .auth-feature i {
         width: 38px;
