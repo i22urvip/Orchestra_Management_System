@@ -114,7 +114,7 @@ def nuevo_compositor(request):
         form = CompositorForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('catalogo/lista_compositores')
+            return redirect('lista_compositores')
     else:
         form = CompositorForm()
     return render(request, 'catalogo/nuevo_compositor.html', {'form': form})
